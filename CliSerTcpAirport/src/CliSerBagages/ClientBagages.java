@@ -11,4 +11,5 @@ package CliSerBagages;
  */
 public class ClientBagages {
     
+    
 }
