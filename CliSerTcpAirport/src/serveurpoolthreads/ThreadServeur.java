@@ -14,9 +14,17 @@ public class ThreadServeur extends Thread
     private SourceTaches tachesAExecuter;
     private ConsoleServeur guiApplication;
     private ServerSocket SSocket = null;
+    private int nbrPool;
+    
+    public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs, int nbrPool)
+    {
+        port = p; tachesAExecuter = st; guiApplication = fs;
+        this.nbrPool = nbrPool;
+    }
     public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs)
     {
         port = p; tachesAExecuter = st; guiApplication = fs;
+        this.nbrPool = 3;
     }
     public void run()
     {
@@ -31,8 +39,7 @@ public class ThreadServeur extends Thread
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {
-            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +
-            String.valueOf(i));
+            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +String.valueOf(i));
             thr.start();
         }
         // Mise en attente du serveur
@@ -75,4 +82,46 @@ public class ThreadServeur extends Thread
                 System.out.println("Pas de mise en file");
         }
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Setter et Getter">
+    public int getPort() {
+        return port;
+    }
+    
+    private void setPort(int port) {
+        this.port = port;
+    }
+    
+    public SourceTaches getTachesAExecuter() {
+        return tachesAExecuter;
+    }
+    
+    private void setTachesAExecuter(SourceTaches tachesAExecuter) {
+        this.tachesAExecuter = tachesAExecuter;
+    }
+    
+    public ConsoleServeur getGuiApplication() {
+        return guiApplication;
+    }
+    
+    private void setGuiApplication(ConsoleServeur guiApplication) {
+        this.guiApplication = guiApplication;
+    }
+    
+    public ServerSocket getSSocket() {
+        return SSocket;
+    }
+    
+    private void setSSocket(ServerSocket SSocket) {
+        this.SSocket = SSocket;
+    }
+    
+    public int getNbrPool() {
+        return nbrPool;
+    }
+    
+    public void setNbrPool(int nbrPool) {
+        this.nbrPool = nbrPool;
+    }
+    //</editor-fold>
 }
