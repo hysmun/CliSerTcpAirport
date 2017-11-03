@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 import requetepoolthreads.Requete;
 /**
-* @author Vilvens
+* @author 'Toine
 */
 public class ThreadServeur extends Thread
 {
