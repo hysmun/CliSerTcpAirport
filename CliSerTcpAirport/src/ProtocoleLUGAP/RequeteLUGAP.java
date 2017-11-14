@@ -52,7 +52,23 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     
     public RequeteLUGAP(String login, String motdepasse) {
-        //DESKeyGenerator keygen = new DESKeyGenerator();
+        long temps = (new Date()).getTime();
+        double alea = Math.random();
+        
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps); bdos.writeDouble(alea);
+            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            md.update(motdepasse.getBytes());
+            md.update(baos.toByteArray());
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.type = REQUEST_LOGIN;
     }
     
@@ -165,6 +181,11 @@ public class RequeteLUGAP implements Requete, Serializable
     
     public void setChargeUtile(String chargeUtile) {
         this.chargeUtile = chargeUtile;
+    }
+    
+    public void addChargeUtile(String charge)
+    {
+        this.chargeUtile += sepChamp+charge;
     }
     
     public Socket getSocketClient() {
