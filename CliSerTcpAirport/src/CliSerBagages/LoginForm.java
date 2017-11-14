@@ -7,6 +7,7 @@ package CliSerBagages;
 
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -16,6 +17,7 @@ import java.net.Socket;
 public class LoginForm extends javax.swing.JDialog {
 
     private Socket CSocket;
+    private ObjectOutputStream oos;
     
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -114,6 +116,17 @@ public class LoginForm extends javax.swing.JDialog {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         RequeteLUGAP req = new RequeteLUGAP();
+        try
+        {
+            oos = new ObjectOutputStream(CSocket.getOutputStream());
+            oos.writeObject(req);
+        }
+        catch(IOException e)
+        {
+            System.out.println("Erreur write obj client : " + e.getMessage());
+            System.exit(0);
+        }
+        
     }//GEN-LAST:event_OKButtonActionPerformed
 
     /**
