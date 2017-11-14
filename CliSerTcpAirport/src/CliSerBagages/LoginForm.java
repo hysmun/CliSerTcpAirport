@@ -115,11 +115,11 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
-        RequeteLUGAP req = new RequeteLUGAP();
+        //RequeteLUGAP req = new RequeteLUGAP();
         try
         {
             oos = new ObjectOutputStream(CSocket.getOutputStream());
-            oos.writeObject(req);
+           // oos.writeObject(req);
         }
         catch(IOException e)
         {
