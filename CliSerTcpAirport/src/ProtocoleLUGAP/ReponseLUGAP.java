@@ -24,6 +24,8 @@ public class ReponseLUGAP implements Reponse, Serializable{
         this.chargeUtile = chargeUtile;
     }
     
+    
+    
     //<editor-fold defaultstate="collapsed" desc="Getter et Setter">
     @Override
     public int getCode() {

@@ -37,6 +37,14 @@ public class ThreadServeur extends Thread
         {
             System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
         }
+        catch(IllegalStateException e)
+        {
+            
+        }
+        catch(Exception e)
+        {
+            
+        }
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {

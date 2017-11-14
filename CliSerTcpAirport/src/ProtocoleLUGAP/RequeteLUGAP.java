@@ -12,7 +12,7 @@ import java.util.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bouncycastle.crypto.generators.DESKeyGenerator;
+import java.security.*;
 /**
  *
  * @author 'Toine
