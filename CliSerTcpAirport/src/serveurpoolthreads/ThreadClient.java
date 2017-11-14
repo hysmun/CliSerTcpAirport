@@ -23,7 +23,8 @@ public class ThreadClient extends Thread
             }
             catch (InterruptedException e)
             {
-                System.out.println("Interruption : " + e.getMessage());
+                System.out.println("Interruption thread num "+ this.nom + " : " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
             System.out.println("run de tachesencours");
             tacheEnCours.run();

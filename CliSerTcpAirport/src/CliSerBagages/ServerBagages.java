@@ -8,6 +8,7 @@ package CliSerBagages;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import serveurpoolthreads.ConsoleServeur;
+import serveurpoolthreads.ListeTaches;
 import serveurpoolthreads.ThreadServeur;
 
 /**
@@ -40,11 +41,10 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
 
         PanelPrinc = new javax.swing.JPanel();
         StartServerButton = new javax.swing.JButton();
-        ScrollPaneTableThreads = new javax.swing.JScrollPane();
-        ThreadsTable = new javax.swing.JTable();
         ScrollPaneLogServer = new javax.swing.JScrollPane();
         LogsArea = new javax.swing.JTextArea();
         StopServerButton = new javax.swing.JButton();
+        LabelLogs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,34 +54,6 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
                 StartServerButtonActionPerformed(evt);
             }
         });
-
-        ThreadsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "NumThread", "EtatThread"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        ScrollPaneTableThreads.setViewportView(ThreadsTable);
 
         LogsArea.setColumns(20);
         LogsArea.setRows(5);
@@ -94,19 +66,22 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
             }
         });
 
+        LabelLogs.setText("Fenêtre de log :");
+
         javax.swing.GroupLayout PanelPrincLayout = new javax.swing.GroupLayout(PanelPrinc);
         PanelPrinc.setLayout(PanelPrincLayout);
         PanelPrincLayout.setHorizontalGroup(
             PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPrincLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ScrollPaneLogServer)
-                    .addGroup(PanelPrincLayout.createSequentialGroup()
-                        .addComponent(StartServerButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(StopServerButton))
-                    .addComponent(ScrollPaneTableThreads, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
+                .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LabelLogs)
+                    .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(ScrollPaneLogServer)
+                        .addGroup(PanelPrincLayout.createSequentialGroup()
+                            .addComponent(StartServerButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
+                            .addComponent(StopServerButton))))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         PanelPrincLayout.setVerticalGroup(
@@ -116,10 +91,10 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
                 .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(StartServerButton)
                     .addComponent(StopServerButton))
-                .addGap(18, 18, 18)
-                .addComponent(ScrollPaneTableThreads, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(ScrollPaneLogServer, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(LabelLogs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ScrollPaneLogServer, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -158,7 +133,7 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     private void StartServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerButtonActionPerformed
         TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
         TraceEvenements("Démarrage serveur demandé\n");
-        threadServ = new ThreadServeur(3580,null,this);
+        threadServ = new ThreadServeur(3580,new ListeTaches(),this);
         threadServ.start();
         TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
     }//GEN-LAST:event_StartServerButtonActionPerformed
@@ -199,12 +174,11 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LabelLogs;
     private javax.swing.JTextArea LogsArea;
     private javax.swing.JPanel PanelPrinc;
     private javax.swing.JScrollPane ScrollPaneLogServer;
-    private javax.swing.JScrollPane ScrollPaneTableThreads;
     private javax.swing.JButton StartServerButton;
     private javax.swing.JButton StopServerButton;
-    private javax.swing.JTable ThreadsTable;
     // End of variables declaration//GEN-END:variables
 }
