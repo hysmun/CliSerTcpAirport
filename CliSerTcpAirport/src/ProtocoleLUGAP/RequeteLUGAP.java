@@ -79,6 +79,38 @@ public class RequeteLUGAP implements Requete, Serializable
                     traiteRequeteListeVols(s, cs);
                 }
             };
+        if (type==REQUEST_LISTEBAGAGE)
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiteRequeteListeVols(s, cs);
+                }
+            };
+        if (type==REQUEST_RECEPBAGAGE)
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiteRequeteReceptionBagage(s, cs);
+                }
+            };
+        if (type==REQUEST_VERIFBAGAGE)
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiteRequeteVerificationBagage(s, cs);
+                }
+            };
+        if (type==REQUEST_CHARGBAGAGE)
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiteRequeteChargementBagage(s, cs);
+                }
+            };
         /*
         if(type == )
             return new Runnable()
@@ -98,6 +130,21 @@ public class RequeteLUGAP implements Requete, Serializable
    }
    
    private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
+   {
+       
+   }
+   
+   private void traiteRequeteReceptionBagage(Socket sock, ConsoleServeur cs)
+   {
+       
+   }
+   
+   private void traiteRequeteVerificationBagage(Socket sock, ConsoleServeur cs)
+   {
+       
+   }
+   
+   private void traiteRequeteChargementBagage(Socket sock, ConsoleServeur cs)
    {
        
    }
