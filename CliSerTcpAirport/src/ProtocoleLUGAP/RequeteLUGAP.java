@@ -37,9 +37,13 @@ public class RequeteLUGAP implements Requete, Serializable
     public static int REQUEST_VERIFBAGAGE   = 4;
     public static int REQUEST_CHARGBAGAGE   = 4;
     
+    public static char sepChamp = '#';
+    public static char sepList = '|';
+    
     private int type;
     private String chargeUtile;
     private Socket socketClient;
+    
 
     public RequeteLUGAP(int type, String chargeUtile) {
         this.type = type;
