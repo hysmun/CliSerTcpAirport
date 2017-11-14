@@ -17,9 +17,27 @@ public class ReponseLUGAP implements Reponse, Serializable{
     private int codeRetour;
     private String chargeUtile;
 
-    @Override
-    public int getCode() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ReponseLUGAP(int codeRetour, String chargeUtile) {
+        this.codeRetour = codeRetour;
+        this.chargeUtile = chargeUtile;
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Getter et Setter">
+    @Override
+    public int getCode() {
+        return codeRetour;
+    }
+
+    public int getCodeRetour() {
+        return codeRetour;
+    }
+    
+    public String getChargeUtile() {
+        return chargeUtile;
+    }
+    
+    public void setChargeUtile(String chargeUtile) {
+        this.chargeUtile = chargeUtile;
+    }
+    //</editor-fold>
 }
