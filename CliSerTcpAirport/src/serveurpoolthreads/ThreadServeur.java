@@ -10,7 +10,8 @@ import requetepoolthreads.Requete;
 */
 public class ThreadServeur extends Thread
 {
-    private int port;
+    private int port_bagages;
+    private int port_checkin;
     private SourceTaches tachesAExecuter;
     private ConsoleServeur guiApplication;
     private ServerSocket SSocket = null;
@@ -18,19 +19,19 @@ public class ThreadServeur extends Thread
     
     public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs, int nbrPool)
     {
-        port = p; tachesAExecuter = st; guiApplication = fs;
+        port_bagages = p; tachesAExecuter = st; guiApplication = fs;
         this.nbrPool = nbrPool;
     }
     public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs)
     {
-        port = p; tachesAExecuter = st; guiApplication = fs;
+        port_bagages = p; tachesAExecuter = st; guiApplication = fs;
         this.nbrPool = 3;
     }
     public void run()
     {
         try
         {
-            SSocket = new ServerSocket(port);
+            SSocket = new ServerSocket(port_bagages);
         }
         catch (IOException e)
         {
@@ -84,12 +85,19 @@ public class ThreadServeur extends Thread
     }
 
     //<editor-fold defaultstate="collapsed" desc="Setter et Getter">
-    public int getPort() {
-        return port;
+    public int getPortBag() {
+        return port_bagages;
     }
     
-    private void setPort(int port) {
-        this.port = port;
+    public int getPortCheck() {
+        return port_checkin;
+    }
+    private void setPortBag(int port) {
+        this.port_bagages = port;
+    }
+    
+    private void setPortCheckin(int port) {
+        this.port_checkin = port;
     }
     
     public SourceTaches getTachesAExecuter() {
