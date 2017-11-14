@@ -30,7 +30,12 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     //</editor-fold>
     
-    public static int REQUEST_LOGIN = 1;
+    public static int REQUEST_LOGIN         = 1;
+    public static int REQUEST_LISTEVOLS     = 2;
+    public static int REQUEST_LISTEBAGAGE   = 3;
+    public static int REQUEST_RECEPBAGAGE   = 4;
+    public static int REQUEST_VERIFBAGAGE   = 4;
+    public static int REQUEST_CHARGBAGAGE   = 4;
     
     private int type;
     private String chargeUtile;
@@ -62,12 +67,12 @@ public class RequeteLUGAP implements Requete, Serializable
                     traiteRequeteLogin(s, cs);
                 }
             };
-        if (type==REQUEST_LOGIN)
+        if (type==REQUEST_LISTEVOLS)
             return new Runnable()
             {
                 public void run()
                 {
-                    traiteRequeteLogin(s, cs);
+                    traiteRequeteListeVols(s, cs);
                 }
             };
         /*
@@ -84,6 +89,11 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     
    private void traiteRequeteLogin(Socket sock, ConsoleServeur cs)
+   {
+       
+   }
+   
+   private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
    {
        
    }
