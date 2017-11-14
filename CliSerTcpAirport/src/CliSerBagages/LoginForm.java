@@ -5,18 +5,28 @@
  */
 package CliSerBagages;
 
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  *
  * @author Rémy
  */
 public class LoginForm extends javax.swing.JDialog {
 
-    /**
-     * Creates new form LoginForm
-     */
+    private Socket CSocket;
+    
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        try
+        {
+            CSocket = new Socket("user",3580);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
+        }
     }
 
     /**
@@ -42,8 +52,18 @@ public class LoginForm extends javax.swing.JDialog {
         MdpLabel.setText("Mot de passe :");
 
         OKButton.setText("OK");
+        OKButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OKButtonActionPerformed(evt);
+            }
+        });
 
         CancelButton.setText("Annuler");
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,6 +106,14 @@ public class LoginForm extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_CancelButtonActionPerformed
+
+    private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
+        
+    }//GEN-LAST:event_OKButtonActionPerformed
 
     /**
      * @param args the command line arguments

@@ -5,15 +5,16 @@
  */
 package CliSerBagages;
 
+import serveurpoolthreads.ConsoleServeur;
+
 /**
  *
  * @author Rémy
  */
 public class applicMain {
 
-    /**
-     * @param args the command line arguments
-     */
+    private ConsoleServeur cs;
+
     public static void main(String[] args) {
         LoginForm lf = new LoginForm(null,true);
         lf.setVisible(true);
