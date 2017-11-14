@@ -12,6 +12,7 @@ import java.util.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bouncycastle.crypto.generators.DESKeyGenerator;
 /**
  *
  * @author 'Toine
@@ -42,7 +43,7 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     
     public RequeteLUGAP(String login, String motdepasse) {
-        /*faire le digest salé ici*/
+        DESKeyGenerator keygen = new DESKeyGenerator();
         this.type = REQUEST_LOGIN;
     }
     
