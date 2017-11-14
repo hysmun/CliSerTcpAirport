@@ -44,6 +44,7 @@ public class RequeteLUGAP implements Requete, Serializable
     private int type;
     private String chargeUtile;
     private Socket socketClient;
+    private StringTokenizer strTok;
     
 
     public RequeteLUGAP(int type, String chargeUtile) {
@@ -62,6 +63,10 @@ public class RequeteLUGAP implements Requete, Serializable
             MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(motdepasse.getBytes());
             md.update(baos.toByteArray());
+            setChargeUtile(login);
+            addChargeUtile(String.valueOf(temps));
+            addChargeUtile(String.valueOf(alea));
+            addChargeUtile(new String(md.digest()));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchProviderException ex) {
@@ -69,7 +74,9 @@ public class RequeteLUGAP implements Requete, Serializable
         } catch (IOException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         this.type = REQUEST_LOGIN;
+        strTok = new StringTokenizer(chargeUtile, sepChamp+"");
     }
     
     public RequeteLUGAP(int type, String chargeUtile, Socket socketClient) {
@@ -141,10 +148,58 @@ public class RequeteLUGAP implements Requete, Serializable
         return null;
     }
     
-   private void traiteRequeteLogin(Socket sock, ConsoleServeur cs)
-   {
-       
-   }
+    private void traiteRequeteLogin(Socket sock, ConsoleServeur cs)
+    {
+        String loginT="user", mdpT="user", digest = "";
+        long temps = 0;
+        double alea = 0;
+        int ttype = ReponseLUGAP.CONNECTION_KO;
+        /* recherche login mdp*/
+
+
+
+        if(loginT.equals(nextToken()))
+        {
+            //login ok
+            //creation du digest
+             try {
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                  DataOutputStream bdos = new DataOutputStream(baos);
+                  bdos.writeLong(temps); bdos.writeDouble(alea);
+                  MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+                  md.update(mdpT.getBytes());
+                  md.update(baos.toByteArray());
+                  digest = new String(md.digest());
+              } catch (NoSuchAlgorithmException ex) {
+                  Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (NoSuchProviderException ex) {
+                  Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (IOException ex) {
+                Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(digest.equals(nextToken()))
+            {
+                //digest le même
+                ttype = ReponseLUGAP.CONNECTION_OK;
+            }
+        }
+        
+        
+        //reponse !
+        
+        ReponseLUGAP repLugap = new ReponseLUGAP(ttype, chargeUtile);
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(repLugap); oos.flush();
+            oos.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
+    }
    
    private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
    {
@@ -194,6 +249,24 @@ public class RequeteLUGAP implements Requete, Serializable
     
     public void setSocketClient(Socket socketClient) {
         this.socketClient = socketClient;
+    }
+    
+    public String nextToken()
+    {
+        if(strTok != null)
+        {
+            return strTok.nextToken();
+        }
+        return null;
+    }
+    
+    public String nextTokenListe()
+    {
+        if(strTok != null)
+        {
+            return strTok.nextToken(sepList+"");
+        }
+        return null;
     }
 //</editor-fold>
 }
