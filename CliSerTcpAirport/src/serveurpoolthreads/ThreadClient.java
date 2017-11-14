@@ -1,4 +1,9 @@
 package serveurpoolthreads;
+
+import BDUtilities.BDUtilities;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
 * @author 'Toine
 */
@@ -7,10 +12,17 @@ public class ThreadClient extends Thread
     private SourceTaches tachesAExecuter;
     private String nom;
     private Runnable tacheEnCours;
+    private BDUtilities BDConnection;
+    
     public ThreadClient(SourceTaches st, String n )
     {
         tachesAExecuter = st;
         nom = n;
+        try {
+            BDConnection = new BDUtilities("localhost", 5555);
+        } catch (Exception ex) {
+            Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void run()
