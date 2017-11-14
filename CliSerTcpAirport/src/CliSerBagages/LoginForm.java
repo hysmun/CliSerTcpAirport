@@ -5,6 +5,7 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.ReponseLUGAP;
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -24,7 +25,7 @@ public class LoginForm extends javax.swing.JDialog {
         initComponents();
         try
         {
-            CSocket = new Socket("user",3580);
+            CSocket = new Socket("localhost",3580);
         }
         catch (IOException e)
         {
@@ -115,11 +116,12 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
-        //RequeteLUGAP req = new RequeteLUGAP();
+        RequeteLUGAP req = new RequeteLUGAP(LoginTextField.getText(), PasswdField.getText());
+        ReponseLUGAP rep = null;
         try
         {
             oos = new ObjectOutputStream(CSocket.getOutputStream());
-           // oos.writeObject(req);
+           oos.writeObject(req);
         }
         catch(IOException e)
         {
