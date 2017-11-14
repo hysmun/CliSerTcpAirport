@@ -18,13 +18,6 @@ public class ClientBagages extends javax.swing.JFrame {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
-        setVisible(false);
-        loginForm lf = new loginForm();
-        lf.setVisible(true);
-        while(lf.isVisible() == true)
-        {
-        }
-        setVisible(true);
     }
 
     /**
