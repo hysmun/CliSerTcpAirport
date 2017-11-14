@@ -18,6 +18,13 @@ public class ClientBagages extends javax.swing.JFrame {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
+        setVisible(false);
+        loginForm lf = new loginForm();
+        lf.setVisible(true);
+        while(lf.isVisible() == true)
+        {
+        }
+        setVisible(true);
     }
 
     /**
@@ -29,23 +36,29 @@ public class ClientBagages extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        ScrollPaneClient = new javax.swing.JScrollPane();
-        ListeVols = new javax.swing.JList<>();
-        jLabel2 = new javax.swing.JLabel();
+        CurrentUserLabel = new javax.swing.JLabel();
+        FlightsListLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        FlightTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Utilisateur :");
+        CurrentUserLabel.setText("Utilisateur :");
 
-        ListeVols.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "VOL 714 WALABIES-AIRLINES - Sydney 5h30", "VOL 362 POWDER-AIRLINES - Peshawar 6h30", "VOL 152 AIR FRABCE CANAILLE - Paris 7h30", "VOL 597 SABENA - Bruxelles 8h30" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        ScrollPaneClient.setViewportView(ListeVols);
+        FlightsListLabel.setText("Liste des vols :");
 
-        jLabel2.setText("Liste des vols :");
+        FlightTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "idVol", "Nom"
+            }
+        ));
+        jScrollPane1.setViewportView(FlightTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -54,23 +67,20 @@ public class ClientBagages extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ScrollPaneClient, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(CurrentUserLabel)
+                    .addComponent(FlightsListLabel)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addComponent(CurrentUserLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(FlightsListLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ScrollPaneClient, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -113,9 +123,9 @@ public class ClientBagages extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList<String> ListeVols;
-    private javax.swing.JScrollPane ScrollPaneClient;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel CurrentUserLabel;
+    private javax.swing.JTable FlightTable;
+    private javax.swing.JLabel FlightsListLabel;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
