@@ -52,7 +52,7 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     
     public RequeteLUGAP(String login, String motdepasse) {
-        DESKeyGenerator keygen = new DESKeyGenerator();
+        //DESKeyGenerator keygen = new DESKeyGenerator();
         this.type = REQUEST_LOGIN;
     }
     
