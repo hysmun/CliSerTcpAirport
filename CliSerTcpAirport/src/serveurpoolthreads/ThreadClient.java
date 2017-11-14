@@ -19,6 +19,7 @@ public class ThreadClient extends Thread
             try
             {
                 System.out.println("Tread client avant get");
+                this.wait();
                 tacheEnCours = tachesAExecuter.getTache();
             }
             catch (InterruptedException e)

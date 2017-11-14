@@ -56,12 +56,11 @@
                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="LabelLogs" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="ScrollPaneLogServer" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ScrollPaneLogServer" alignment="0" min="-2" pref="641" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
                               <Component id="StartServerButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="397" max="32767" attributes="0"/>
-                              <Component id="StopServerButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="242" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -73,10 +72,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="StartServerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="StopServerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="StartServerButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                   <Component id="LabelLogs" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -110,14 +106,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="StopServerButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Arr&#xea;t serveur"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StopServerButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="LabelLogs">
           <Properties>
             <Property name="text" type="java.lang.String" value="Fen&#xea;tre de log :"/>

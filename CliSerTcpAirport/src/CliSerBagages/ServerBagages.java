@@ -43,7 +43,6 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
         StartServerButton = new javax.swing.JButton();
         ScrollPaneLogServer = new javax.swing.JScrollPane();
         LogsArea = new javax.swing.JTextArea();
-        StopServerButton = new javax.swing.JButton();
         LabelLogs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -59,13 +58,6 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
         LogsArea.setRows(5);
         ScrollPaneLogServer.setViewportView(LogsArea);
 
-        StopServerButton.setText("Arrêt serveur");
-        StopServerButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StopServerButtonActionPerformed(evt);
-            }
-        });
-
         LabelLogs.setText("Fenêtre de log :");
 
         javax.swing.GroupLayout PanelPrincLayout = new javax.swing.GroupLayout(PanelPrinc);
@@ -76,21 +68,18 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
                 .addGap(40, 40, 40)
                 .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(LabelLogs)
-                    .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(ScrollPaneLogServer)
-                        .addGroup(PanelPrincLayout.createSequentialGroup()
+                    .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(ScrollPaneLogServer, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPrincLayout.createSequentialGroup()
                             .addComponent(StartServerButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
-                            .addComponent(StopServerButton))))
+                            .addGap(242, 242, 242))))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         PanelPrincLayout.setVerticalGroup(
             PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPrincLayout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(PanelPrincLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(StartServerButton)
-                    .addComponent(StopServerButton))
+                .addComponent(StartServerButton)
                 .addGap(37, 37, 37)
                 .addComponent(LabelLogs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -121,14 +110,6 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void StopServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StopServerButtonActionPerformed
-        TraceEvenements("Arrêt serveur demandé\n");
-        threadServ.interrupt();
-        TraceEvenements("Serveur arrêté\n");
-        TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
-        
-    }//GEN-LAST:event_StopServerButtonActionPerformed
 
     private void StartServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerButtonActionPerformed
         TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
@@ -179,6 +160,5 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     private javax.swing.JPanel PanelPrinc;
     private javax.swing.JScrollPane ScrollPaneLogServer;
     private javax.swing.JButton StartServerButton;
-    private javax.swing.JButton StopServerButton;
     // End of variables declaration//GEN-END:variables
 }
