@@ -23,6 +23,8 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     
     public ServerBagages() {
         initComponents();
+        setTitle("Interface serveur");
+        setLocationRelativeTo(null);
     }
 
     @Override
@@ -46,6 +48,8 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
         LabelLogs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        PanelPrinc.setName("Interface serveur"); // NOI18N
 
         StartServerButton.setText("Démarrer serveur");
         StartServerButton.addActionListener(new java.awt.event.ActionListener() {
