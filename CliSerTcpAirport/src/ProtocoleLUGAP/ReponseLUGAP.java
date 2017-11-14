@@ -11,6 +11,11 @@ import requetepoolthreads.Reponse;
  * @author 'Toine
  */
 public class ReponseLUGAP implements Reponse, Serializable{
+    public static int CONNECTION_OK = 201;
+
+
+    private int codeRetour;
+    private String chargeUtile;
 
     @Override
     public int getCode() {

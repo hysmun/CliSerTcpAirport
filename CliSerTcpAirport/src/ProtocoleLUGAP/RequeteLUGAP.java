@@ -41,6 +41,11 @@ public class RequeteLUGAP implements Requete, Serializable
         this.chargeUtile = chargeUtile;
     }
     
+    public RequeteLUGAP(String login, String motdepasse) {
+        /*faire le digest salé ici*/
+        this.type = REQUEST_LOGIN;
+    }
+    
     public RequeteLUGAP(int type, String chargeUtile, Socket socketClient) {
         this.type = type;
         this.chargeUtile = chargeUtile;
