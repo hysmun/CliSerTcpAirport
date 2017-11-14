@@ -5,6 +5,7 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -112,7 +113,7 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
-        
+        RequeteLUGAP req = new RequeteLUGAP();
     }//GEN-LAST:event_OKButtonActionPerformed
 
     /**

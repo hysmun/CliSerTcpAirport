@@ -13,7 +13,6 @@ import serveurpoolthreads.ConsoleServeur;
  */
 public class applicMain {
 
-    private ConsoleServeur cs;
 
     public static void main(String[] args) {
         LoginForm lf = new LoginForm(null,true);
