@@ -11,8 +11,10 @@ import requetepoolthreads.Reponse;
  * @author 'Toine
  */
 public class ReponseLUGAP implements Reponse, Serializable{
-    public static int CONNECTION_OK = 201;
-
+    public static int CONNECTION_OK     = 201;
+    public static int CONNECTION_KO     = 501;
+    public static int LISTVOLS          = 202;
+    public static int LISTBAGAGE        = 203;
 
     private int codeRetour;
     private String chargeUtile;
