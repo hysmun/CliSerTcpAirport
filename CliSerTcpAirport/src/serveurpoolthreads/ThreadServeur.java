@@ -81,8 +81,8 @@ public class ThreadServeur extends Thread
                 guiApplication.TraceEvenements("Attente requete");
                 ois = new ObjectInputStream(CSocket.getInputStream());
                 req = (Requete)ois.readObject();
-                System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
-                guiApplication.TraceEvenements("Requete recue "+req);
+                //System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                //guiApplication.TraceEvenements("Requete recue "+req);
             }
             catch (ClassNotFoundException e)
             {
