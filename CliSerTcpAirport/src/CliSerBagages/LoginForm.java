@@ -24,7 +24,7 @@ public class LoginForm extends javax.swing.JDialog {
         initComponents();
         try
         {
-            CSocket = new Socket("user",3580);
+            CSocket = new Socket("localhost",3580);
         }
         catch (IOException e)
         {
