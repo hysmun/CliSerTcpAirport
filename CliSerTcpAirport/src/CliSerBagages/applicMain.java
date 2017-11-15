@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bouncycastle.asn1.crmf.POPOPrivKey;
 import serveurpoolthreads.*;
 
 /**
@@ -28,19 +29,15 @@ public class applicMain {
         try
         {
             Socket cs=null;
-            ObjectOutputStream oos;
-            ObjectInputStream ois;
+            ObjectOutputStream oos = null;
+            ObjectInputStream ois = null;
             try
             {
                 cs = new Socket("localhost",3580);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                oos = new ObjectOutputStream(cs.getOutputStream());
+                /*
                 ois = new ObjectInputStream(cs.getInputStream());
-                 
+                oos = new ObjectOutputStream(cs.getOutputStream());
+                */
             }
             catch (IOException e)
             {
@@ -49,8 +46,10 @@ public class applicMain {
             
             System.out.println("Crea login");
             LoginForm lf = new LoginForm(null,true);
+            
             lf.CS = cs;
             lf.setVisible(true);
+            
             
             
             while(lf.isVisible() == true)
@@ -61,10 +60,13 @@ public class applicMain {
                     Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            oos = lf.oos;
+            ois = lf.ois;
             
-            ClientBagages cb = new ClientBagages(cs);
+            ClientBagages cb = new ClientBagages(cs, oos, ois);
+            cb.oos = oos;
+            cb.ois = ois;
             cb.setVisible(true);
-            cb.refreshListBagage();
             
         }
         catch (Exception ex)
