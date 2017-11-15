@@ -120,8 +120,6 @@ public class LoginForm extends javax.swing.JDialog {
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         RequeteLUGAP req = new RequeteLUGAP(LoginTextField.getText(), PasswdField.getText());
         ReponseLUGAP rep = null;
-        ObjectOutputStream oos;
-        ObjectInputStream ois;
         try
         {
             System.out.println("Client avant stream");
