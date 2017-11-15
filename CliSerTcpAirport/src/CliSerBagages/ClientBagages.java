@@ -5,6 +5,7 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.*;
 import java.net.Socket;
 
 /**
@@ -29,6 +30,7 @@ public class ClientBagages extends javax.swing.JFrame {
         setTitle("Interface client");
         setLocationRelativeTo(null);
         cs = tcs;
+        RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
     }
 
     /**

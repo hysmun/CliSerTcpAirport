@@ -40,11 +40,13 @@ public class ReponseLUGAP implements Reponse, Serializable{
     
     public void addChargeUtile(String charge)
     {
-        this.chargeUtile += sepChamp+charge;
+        this.chargeUtile += ""+sepChamp+charge;
     }
 
     public String nextToken()
     {
+        if(strTok == null)
+            strTok = new StringTokenizer(chargeUtile, sepChamp+"");
         if(strTok != null)
         {
             return strTok.nextToken();
@@ -54,6 +56,8 @@ public class ReponseLUGAP implements Reponse, Serializable{
     
     public String nextTokenListe()
     {
+        if(strTok == null)
+            strTok = new StringTokenizer(chargeUtile, sepChamp+"");
         if(strTok != null)
         {
             return strTok.nextToken(sepList+"");

@@ -46,7 +46,12 @@ public class RequeteLUGAP implements Requete, Serializable
     private Socket socketClient;
     private transient StringTokenizer strTok;
     
-
+    public RequeteLUGAP(int type) {
+        this.type = type;
+        this.chargeUtile = "";
+        strTok = new StringTokenizer(chargeUtile, sepChamp+"");
+    }
+    
     public RequeteLUGAP(int type, String chargeUtile) {
         this.type = type;
         this.chargeUtile = chargeUtile;
@@ -157,6 +162,33 @@ public class RequeteLUGAP implements Requete, Serializable
         /* recherche login mdp*/
         cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
 
+        //traitement
+        
+        //reponse !
+        ReponseLUGAP repLugap = new ReponseLUGAP(ttype, chargeUtile);
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(repLugap); oos.flush();
+            oos.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
+    }
+   
+   private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
+   {
+       String loginT="user", mdpT="user", digest = "", tmpS=null;
+        long temps = 0;
+        double alea = 0;
+        int ttype = ReponseLUGAP.CONNECTION_KO;
+        String adresseDistante = sock.getRemoteSocketAddress().toString();
+        /* recherche login mdp*/
+        cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+
         tmpS = nextToken();
         //cs.TraceEvenements("Login = " + tmpS);
         if(loginT.equals(tmpS))
@@ -202,11 +234,6 @@ public class RequeteLUGAP implements Requete, Serializable
         {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
         }
-    }
-   
-   private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
-   {
-       
    }
    
    private void traiteRequeteReceptionBagage(Socket sock, ConsoleServeur cs)
