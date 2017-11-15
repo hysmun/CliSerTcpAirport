@@ -27,9 +27,7 @@ public class ClientBagages extends javax.swing.JFrame {
     /**
      * Creates new form ClientBagages
      */
-    ObjectOutputStream oos;
-    ObjectInputStream ois;
-    Socket cs;
+    applicMain ap;
     
     public ClientBagages() {
         initComponents();
@@ -37,17 +35,11 @@ public class ClientBagages extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
     
-    public ClientBagages(Socket tcs) {
-        try {
-            initComponents();
-            setTitle("Interface client");
-            setLocationRelativeTo(null);
-            cs = tcs;
-            oos = new ObjectOutputStream(tcs.getOutputStream());
-            ois = new ObjectInputStream(tcs.getInputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public ClientBagages(applicMain appM) {
+        initComponents();
+        setTitle("Interface client");
+        setLocationRelativeTo(null);
+        ap = appM;
     }
     
     public void refreshListBagage()
@@ -59,8 +51,8 @@ public class ClientBagages extends javax.swing.JFrame {
             TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
-            oos.writeObject(req);
-            rep = (ReponseLUGAP)ois.readObject();
+            applicMain.oos.writeObject(req);
+            rep = (ReponseLUGAP)applicMain.ois.readObject();
             
             stringRes = rep.getChargeUtile();
             byte[] byteArrayFromString = stringRes.getBytes();
@@ -71,10 +63,13 @@ public class ClientBagages extends javax.swing.JFrame {
             tdm = FlightTable.getModel();
             rsmd = rs.getMetaData();
             rs.next();
-            for()
-            tdm.setValueAt(bais, WIDTH, ICONIFIED);
-            
-            rep = (ReponseLUGAP)ois.readObject();
+            for(int i=0; i<rsmd.getColumnCount(); i++)
+            {
+                rs.absolute(i+1);
+                tdm.setValueAt(rs.getObject(1), i, 1);
+                tdm.setValueAt(rs.getObject(2), i, 2);
+            }
+            FlightTable.setModel(tdm);
         } catch (IOException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

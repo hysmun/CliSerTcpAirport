@@ -8,12 +8,8 @@ package CliSerBagages;
 import ProtocoleLUGAP.ReponseLUGAP;
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,24 +18,17 @@ import javax.swing.JOptionPane;
  */
 public class LoginForm extends javax.swing.JDialog {
 
-    public Socket CSocket;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    
     public boolean loginReussi;
+    public applicMain ap;
     
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        try
-        {
-            CSocket = new Socket("localhost",3580);
-        }
-        catch (IOException e)
-        {
-            System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
-        }
         loginReussi=false;
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,12 +117,9 @@ public class LoginForm extends javax.swing.JDialog {
         ReponseLUGAP rep = null;
         try
         {
-            oos = new ObjectOutputStream(CSocket.getOutputStream());
-            oos.writeObject(req);
+            applicMain.oos.writeObject(req);
             System.out.println("Client envois messages login");
-            ois = new ObjectInputStream(CSocket.getInputStream());
-            rep = (ReponseLUGAP)ois.readObject();
-            
+            rep = (ReponseLUGAP)applicMain.ois.readObject();
             if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
             {
                 loginReussi = true;
@@ -146,6 +132,7 @@ public class LoginForm extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this,"Login Rater");
                 setVisible(false);
             }
+            
         }
         catch(IOException e)
         {
@@ -158,6 +145,8 @@ public class LoginForm extends javax.swing.JDialog {
         
     }//GEN-LAST:event_OKButtonActionPerformed
 
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -199,6 +188,7 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelButton;
