@@ -22,38 +22,55 @@ public class applicMain {
 
     
     public static Socket CS;
-    public static ObjectOutputStream oos;
-    public static ObjectInputStream ois;
     
     public static void main(String[] args) {
         
         try
         {
-            CS = new Socket("localhost",3580);
-            oos = new ObjectOutputStream(CS.getOutputStream());
-            ois = new ObjectInputStream(CS.getInputStream());
-        }
-        catch (IOException e)
-        {
-            System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
-        }
-        
-        
-        LoginForm lf = new LoginForm(null,true);
-        lf.setVisible(true);
-        
-        while(lf.isVisible() == true)
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+            Socket cs=null;
+            ObjectOutputStream oos;
+            ObjectInputStream ois;
+            try
+            {
+                cs = new Socket("localhost",3580);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                oos = new ObjectOutputStream(cs.getOutputStream());
+                ois = new ObjectInputStream(cs.getInputStream());
+                 
             }
+            catch (IOException e)
+            {
+                System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
+            }
+            
+            System.out.println("Crea login");
+            LoginForm lf = new LoginForm(null,true);
+            lf.CS = cs;
+            lf.setVisible(true);
+            
+            
+            while(lf.isVisible() == true)
+            {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            ClientBagages cb = new ClientBagages(cs);
+            cb.setVisible(true);
+            cb.refreshListBagage();
+            
         }
-        
-        ClientBagages cb = new ClientBagages();
-        cb.setVisible(true);
-        cb.refreshListBagage();
+        catch (Exception ex)
+        {
+            Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
