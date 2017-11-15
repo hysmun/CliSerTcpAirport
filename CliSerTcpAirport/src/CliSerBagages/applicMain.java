@@ -5,18 +5,40 @@
  */
 package CliSerBagages;
 
+import java.io.*;
+import java.net.Socket;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import serveurpoolthreads.ConsoleServeur;
+import serveurpoolthreads.*;
 
 /**
  *
  * @author Rémy
  */
+
+
 public class applicMain {
 
-
+    
+    public static Socket CS;
+    public static ObjectOutputStream oos;
+    public static ObjectInputStream ois;
+    
     public static void main(String[] args) {
+        
+        try
+        {
+            CS = new Socket("localhost",3580);
+            oos = new ObjectOutputStream(CS.getOutputStream());
+            ois = new ObjectInputStream(CS.getInputStream());
+        }
+        catch (IOException e)
+        {
+            System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
+        }
+        
+        
         LoginForm lf = new LoginForm(null,true);
         lf.setVisible(true);
         
@@ -29,8 +51,9 @@ public class applicMain {
             }
         }
         
-        ClientBagages cb = new ClientBagages(lf.CSocket);
+        ClientBagages cb = new ClientBagages();
         cb.setVisible(true);
+        cb.refreshListBagage();
         
     }
     

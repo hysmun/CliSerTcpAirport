@@ -6,7 +6,17 @@
 package CliSerBagages;
 
 import ProtocoleLUGAP.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -17,7 +27,7 @@ public class ClientBagages extends javax.swing.JFrame {
     /**
      * Creates new form ClientBagages
      */
-    Socket cs;
+    applicMain ap;
     
     public ClientBagages() {
         initComponents();
@@ -25,12 +35,48 @@ public class ClientBagages extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
     
-    public ClientBagages(Socket tcs) {
+    public ClientBagages(applicMain appM) {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
-        cs = tcs;
-        RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
+        ap = appM;
+    }
+    
+    public void refreshListBagage()
+    {
+        try {
+            String stringRes;
+            ResultSet rs;
+            ResultSetMetaData rsmd;
+            TableModel tdm;
+            RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
+            ReponseLUGAP rep = null;
+            applicMain.oos.writeObject(req);
+            rep = (ReponseLUGAP)applicMain.ois.readObject();
+            
+            stringRes = rep.getChargeUtile();
+            byte[] byteArrayFromString = stringRes.getBytes();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayFromString);
+            ObjectInputStream tmpoos = new ObjectInputStream(bais);
+            
+            rs = (ResultSet)tmpoos.readObject();
+            tdm = FlightTable.getModel();
+            rsmd = rs.getMetaData();
+            rs.next();
+            for(int i=0; i<rsmd.getColumnCount(); i++)
+            {
+                rs.absolute(i+1);
+                tdm.setValueAt(rs.getObject(1), i, 1);
+                tdm.setValueAt(rs.getObject(2), i, 2);
+            }
+            FlightTable.setModel(tdm);
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
