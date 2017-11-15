@@ -6,7 +6,12 @@
 package CliSerBagages;
 
 import ProtocoleLUGAP.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +22,8 @@ public class ClientBagages extends javax.swing.JFrame {
     /**
      * Creates new form ClientBagages
      */
+    ObjectOutputStream oos;
+    ObjectInputStream ois;
     Socket cs;
     
     public ClientBagages() {
@@ -26,11 +33,31 @@ public class ClientBagages extends javax.swing.JFrame {
     }
     
     public ClientBagages(Socket tcs) {
-        initComponents();
-        setTitle("Interface client");
-        setLocationRelativeTo(null);
-        cs = tcs;
-        RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
+        try {
+            initComponents();
+            setTitle("Interface client");
+            setLocationRelativeTo(null);
+            cs = tcs;
+            oos = new ObjectOutputStream(tcs.getOutputStream());
+            ois = new ObjectInputStream(tcs.getInputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void refreshListBagage()
+    {
+        try {
+            RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
+            ReponseLUGAP rep = null;
+            oos.writeObject(req);
+            
+            rep = (ReponseLUGAP)ois.readObject();
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
