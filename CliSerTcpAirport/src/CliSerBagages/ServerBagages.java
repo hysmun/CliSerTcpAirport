@@ -31,6 +31,7 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     public void TraceEvenements(String message) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         LogsArea.insert(sdf.format(ts)+message, LogsArea.getCaretPosition());
+        System.out.println(sdf.format(ts)+message);
     }
     /**
      * This method is called from within the constructor to initialize the form.

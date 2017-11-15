@@ -24,7 +24,7 @@ public class RequeteLUGAP implements Requete, Serializable
     static
     {
         try {
-            BDConnection = new BDUtilities("localhost", 5555);
+            BDConnection = new BDUtilities("localhost", 5500);
         } catch (Exception ex) {
             Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -60,7 +60,7 @@ public class RequeteLUGAP implements Requete, Serializable
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
             bdos.writeLong(temps); bdos.writeDouble(alea);
-            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(motdepasse.getBytes());
             md.update(baos.toByteArray());
             setChargeUtile(login);
@@ -68,8 +68,6 @@ public class RequeteLUGAP implements Requete, Serializable
             addChargeUtile(String.valueOf(alea));
             addChargeUtile(new String(md.digest()));
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchProviderException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,8 +152,9 @@ public class RequeteLUGAP implements Requete, Serializable
         long temps = 0;
         double alea = 0;
         int ttype = ReponseLUGAP.CONNECTION_KO;
+        String adresseDistante = sock.getRemoteSocketAddress().toString();
         /* recherche login mdp*/
-
+        cs.TraceEvenements(adresseDistante+"#charge utile "+ getChargeUtile()+"#"+Thread.currentThread().getName());
 
 
         if(loginT.equals(nextToken()))
@@ -166,13 +165,11 @@ public class RequeteLUGAP implements Requete, Serializable
                   ByteArrayOutputStream baos = new ByteArrayOutputStream();
                   DataOutputStream bdos = new DataOutputStream(baos);
                   bdos.writeLong(temps); bdos.writeDouble(alea);
-                  MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+                  MessageDigest md = MessageDigest.getInstance("SHA-1");
                   md.update(mdpT.getBytes());
                   md.update(baos.toByteArray());
                   digest = new String(md.digest());
               } catch (NoSuchAlgorithmException ex) {
-                  Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
-              } catch (NoSuchProviderException ex) {
                   Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
               } catch (IOException ex) {
                 Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);

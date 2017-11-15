@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class LoginForm extends javax.swing.JDialog {
 
-    private Socket CSocket;
+    public Socket CSocket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     public boolean loginReussi;
@@ -135,6 +137,14 @@ public class LoginForm extends javax.swing.JDialog {
             if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
             {
                 loginReussi = true;
+                JOptionPane.showMessageDialog(this,"Login reussi !!");
+                setVisible(false);
+            }
+            if(rep.getCode() == ReponseLUGAP.CONNECTION_KO)
+            {
+                loginReussi = false;
+                JOptionPane.showMessageDialog(this,"Login Rater");
+                setVisible(false);
             }
         }
         catch(IOException e)

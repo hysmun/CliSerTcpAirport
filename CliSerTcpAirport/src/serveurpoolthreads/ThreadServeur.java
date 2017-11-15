@@ -2,8 +2,12 @@
 * ThreadServeur.java
 */
 package serveurpoolthreads;
+import ProtocoleLUGAP.RequeteLUGAP;
 import java.net.*;
 import java.io.*;
+import static java.lang.System.exit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import requetepoolthreads.Requete;
 /**
 * @author 'Toine
@@ -39,11 +43,11 @@ public class ThreadServeur extends Thread
         }
         catch(IllegalStateException e)
         {
-            
+            System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
         }
         catch(Exception e)
         {
-            
+            System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
         }
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
@@ -69,9 +73,16 @@ public class ThreadServeur extends Thread
             Requete req = null;
             try
             {
+                /*try {
+                    Thread.sleep(1000000);
+                } catch (InterruptedException ex) {
+                    exit(0);
+                }*/
+                guiApplication.TraceEvenements("Attente requete");
                 ois = new ObjectInputStream(CSocket.getInputStream());
                 req = (Requete)ois.readObject();
                 System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                guiApplication.TraceEvenements("Requete recue "+req);
             }
             catch (ClassNotFoundException e)
             {
@@ -80,6 +91,7 @@ public class ThreadServeur extends Thread
             catch (IOException e)
             {
                 System.err.println("Erreur ? [" + e.getMessage() + "]");
+                Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, e);
             }
             Runnable travail = req.createRunnable(CSocket, guiApplication);
             if (travail != null)
