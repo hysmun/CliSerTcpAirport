@@ -35,19 +35,15 @@ public class ClientBagages extends javax.swing.JFrame {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
+        
     }
     
     public ClientBagages(Socket tcs) {
-        try {
-            initComponents();
-            setTitle("Interface client");
-            setLocationRelativeTo(null);
-            CS = tcs;
-            oos = new ObjectOutputStream(CS.getOutputStream());
-            ois = new ObjectInputStream(CS.getInputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        initComponents();
+        setTitle("Interface client");
+        setLocationRelativeTo(null);
+        CS = tcs;
+        refreshListBagage();
     }
     
     public void refreshListBagage()
@@ -59,7 +55,9 @@ public class ClientBagages extends javax.swing.JFrame {
             TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
+            oos = new ObjectOutputStream(CS.getOutputStream());
             oos.writeObject(req);
+            ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
             
             stringRes = rep.getChargeUtile();

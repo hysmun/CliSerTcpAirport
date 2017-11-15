@@ -28,12 +28,15 @@ public class applicMain {
         try
         {
             Socket cs=null;
-            ObjectOutputStream oos;
-            ObjectInputStream ois;
+            ObjectOutputStream oos = null;
+            ObjectInputStream ois = null;
             try
             {
                 cs = new Socket("localhost",3580);
-                 
+                /*
+                ois = new ObjectInputStream(cs.getInputStream());
+                oos = new ObjectOutputStream(cs.getOutputStream());
+                */
             }
             catch (IOException e)
             {
@@ -43,7 +46,9 @@ public class applicMain {
             System.out.println("Crea login");
             LoginForm lf = new LoginForm(null,true);
             lf.CS = cs;
+            
             lf.setVisible(true);
+            
             
             
             while(lf.isVisible() == true)
@@ -54,8 +59,13 @@ public class applicMain {
                     Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            oos = lf.oos;
+            ois = lf.ois;
             
             ClientBagages cb = new ClientBagages(cs);
+            lf.CS = cs;
+            lf.oos = oos;
+            lf.ois = ois;
             cb.setVisible(true);
             cb.refreshListBagage();
             

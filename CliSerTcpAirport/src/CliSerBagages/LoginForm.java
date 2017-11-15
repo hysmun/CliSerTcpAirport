@@ -124,10 +124,11 @@ public class LoginForm extends javax.swing.JDialog {
         {
             System.out.println("Client avant stream");
             oos = new ObjectOutputStream(CS.getOutputStream());
-            ois = new ObjectInputStream(CS.getInputStream());
+            
             System.out.println("Client avant stream-----");
             oos.writeObject(req);
             System.out.println("Client envois messages login");
+            ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
             if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
             {
