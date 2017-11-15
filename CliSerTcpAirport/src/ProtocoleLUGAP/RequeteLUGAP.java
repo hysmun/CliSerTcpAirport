@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.security.*;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 /**
  *
@@ -204,6 +205,9 @@ public class RequeteLUGAP implements Requete, Serializable
     {
         try
         {
+            ArrayList<ArrayList> listOfLists = null;
+            ArrayList list;
+            String[] record = null;
             String loginT="user", mdpT="user", digest = "", tmpS=null;
             long temps = 0;
             double alea = 0;
@@ -217,7 +221,24 @@ public class RequeteLUGAP implements Requete, Serializable
             rs = BDConnection.query("SELECT * FROM vols");
             
             //reponse !
-            ReponseLUGAP repLugap = new ReponseLUGAP(ttype, rs.toString());
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columns = metaData.getColumnCount();
+            while (rs.next()) {
+                list = null;
+                record = new String[columns];
+                for (int i = 1; i < columns; i++) {
+                    record[i - 1] = rs.getString(i);
+                }
+                list = new ArrayList(Arrays.asList(record));
+                listOfLists.add(list);
+            }
+            byte[] byteArrayFromString = null;
+            ByteArrayOutputStream bais;
+            bais = new ByteArrayOutputStream();
+            ObjectOutputStream tmpois = new ObjectOutputStream(bais);
+            tmpois.writeObject(listOfLists);tmpois.flush();
+            tmpois.close();
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype, new String(bais.toByteArray()));
             ObjectOutputStream oos;
             try
             {
@@ -232,6 +253,8 @@ public class RequeteLUGAP implements Requete, Serializable
         }
         catch (SQLException ex)
         {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

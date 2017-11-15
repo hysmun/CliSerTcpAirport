@@ -33,6 +33,13 @@ public class LoginForm extends javax.swing.JDialog {
         loginReussi=false;
     }
     
+    public LoginForm(java.awt.Frame parent, boolean modal, Socket tcs) {
+        super(parent, modal);
+        initComponents();
+        loginReussi=false;
+        CS = tcs;
+    }
+    
     
 
     /**
@@ -142,6 +149,8 @@ public class LoginForm extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this,"Login Rater");
                 setVisible(false);
             }
+            oos.close();
+            ois.close();
         }
         catch(IOException e)
         {

@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
@@ -35,7 +36,7 @@ public class ClientBagages extends javax.swing.JFrame {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
-        
+        refreshListBagage();
     }
     
     public ClientBagages(Socket tcs) {
@@ -58,38 +59,38 @@ public class ClientBagages extends javax.swing.JFrame {
     public void refreshListBagage()
     {
         try {
+            CS = new Socket("localhost",3580);
             String stringRes;
-            ResultSet rs;
-            ResultSetMetaData rsmd;
+            ArrayList<ArrayList> listOfLists = null;
             TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
-            //oos = new ObjectOutputStream(CS.getOutputStream());
+            System.out.println("crea flux");
+            if(oos == null)
+                oos = new ObjectOutputStream(CS.getOutputStream());
             oos.writeObject(req);oos.flush();
-            //ois = new ObjectInputStream(CS.getInputStream());
+            if(ois == null)
+                ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
-            
+            System.out.println("Liste result obtenu");
             stringRes = rep.getChargeUtile();
             byte[] byteArrayFromString = stringRes.getBytes();
             ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayFromString);
             ObjectInputStream tmpoos = new ObjectInputStream(bais);
             
-            rs = (ResultSet)tmpoos.readObject();
+            listOfLists = (ArrayList<ArrayList>)tmpoos.readObject();
+            System.out.println("Liste result obtenu2");
             tdm = FlightTable.getModel();
-            rsmd = rs.getMetaData();
-            rs.next();
-            for(int i=0; i<rsmd.getColumnCount(); i++)
+            for(int i=0; i<listOfLists.size(); i++)
             {
-                rs.absolute(i+1);
-                tdm.setValueAt(rs.getObject(1), i, 1);
-                tdm.setValueAt(rs.getObject(2), i, 2);
+                tdm.setValueAt(listOfLists.get(i).get(0), i, 0);
+                tdm.setValueAt(listOfLists.get(i).get(1), i, 1);
             }
             FlightTable.setModel(tdm);
+            System.out.println("fin dtm");
         } catch (IOException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

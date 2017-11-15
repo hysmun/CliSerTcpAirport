@@ -33,16 +33,17 @@ public class applicMain {
                 cs = new Socket("localhost",3580);
                 /*
                 ois = new ObjectInputStream(cs.getInputStream());
-                oos = new ObjectOutputStream(cs.getOutputStream());
-                */
+                oos = new ObjectOutputStream(cs.getOutputStream());*/
+                
             }
             catch (IOException e)
             {
                 System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
+                Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, e);
             }
             
             System.out.println("Crea login");
-            LoginForm lf = new LoginForm(null,true);
+            LoginForm lf = new LoginForm(null,true, cs);
             
             lf.CS = cs;
             lf.setVisible(true);
@@ -60,9 +61,9 @@ public class applicMain {
             oos = lf.oos;
             ois = lf.ois;
             
-            ClientBagages cb = new ClientBagages(cs, oos, ois);
-            cb.oos = oos;
-            cb.ois = ois;
+            ClientBagages cb = new ClientBagages();
+            /*cb.oos = oos;
+            cb.ois = ois;*/
             cb.setVisible(true);
             
         }
