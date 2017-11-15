@@ -8,8 +8,11 @@ package CliSerBagages;
 import ProtocoleLUGAP.ReponseLUGAP;
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,6 +22,8 @@ public class LoginForm extends javax.swing.JDialog {
 
     private Socket CSocket;
     private ObjectOutputStream oos;
+    private ObjectInputStream ois;
+    public boolean loginReussi;
     
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -31,6 +36,7 @@ public class LoginForm extends javax.swing.JDialog {
         {
             System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
         }
+        loginReussi=false;
     }
 
     /**
@@ -121,12 +127,22 @@ public class LoginForm extends javax.swing.JDialog {
         try
         {
             oos = new ObjectOutputStream(CSocket.getOutputStream());
-           oos.writeObject(req);
+            oos.writeObject(req);
+            System.out.println("Client envois messages login");
+            ois = new ObjectInputStream(CSocket.getInputStream());
+            rep = (ReponseLUGAP)ois.readObject();
+            
+            if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
+            {
+                loginReussi = true;
+            }
         }
         catch(IOException e)
         {
             System.out.println("Erreur write obj client : " + e.getMessage());
             System.exit(0);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_OKButtonActionPerformed

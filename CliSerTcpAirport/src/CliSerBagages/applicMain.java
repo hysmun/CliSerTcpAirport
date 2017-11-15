@@ -17,7 +17,8 @@ public class applicMain {
     public static void main(String[] args) {
         LoginForm lf = new LoginForm(null,true);
         lf.setVisible(true);
-
+        
+        
     }
     
 }
