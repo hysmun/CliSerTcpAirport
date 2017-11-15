@@ -28,7 +28,7 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     }
 
     @Override
-    public void TraceEvenements(String message) {
+    public synchronized void TraceEvenements(String message) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         LogsArea.insert(sdf.format(ts)+message+"\n", LogsArea.getCaretPosition());
         System.out.println(sdf.format(ts)+message);

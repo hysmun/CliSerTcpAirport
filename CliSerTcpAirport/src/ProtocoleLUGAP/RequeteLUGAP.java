@@ -205,9 +205,6 @@ public class RequeteLUGAP implements Requete, Serializable
     {
         try
         {
-            ArrayList<ArrayList> listOfLists = null;
-            ArrayList list;
-            String[] record = null;
             String loginT="user", mdpT="user", digest = "", tmpS=null;
             long temps = 0;
             double alea = 0;
@@ -221,24 +218,19 @@ public class RequeteLUGAP implements Requete, Serializable
             rs = BDConnection.query("SELECT * FROM vols");
             
             //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
             ResultSetMetaData metaData = rs.getMetaData();
-            int columns = metaData.getColumnCount();
+            int number;
+            rs.last();
+            number = rs.getRow();
+            rs.beforeFirst();
+            repLugap.addChargeUtile(""+number);
             while (rs.next()) {
-                list = null;
-                record = new String[columns];
-                for (int i = 1; i < columns; i++) {
-                    record[i - 1] = rs.getString(i);
+                for (int i = 1; i < 3; i++) {
+                    repLugap.addChargeUtile(rs.getObject(i).toString());
                 }
-                list = new ArrayList(Arrays.asList(record));
-                listOfLists.add(list);
             }
-            byte[] byteArrayFromString = null;
-            ByteArrayOutputStream bais;
-            bais = new ByteArrayOutputStream();
-            ObjectOutputStream tmpois = new ObjectOutputStream(bais);
-            tmpois.writeObject(listOfLists);tmpois.flush();
-            tmpois.close();
-            ReponseLUGAP repLugap = new ReponseLUGAP(ttype, new String(bais.toByteArray()));
+            System.out.println("Nombre : "+number+"  ");
             ObjectOutputStream oos;
             try
             {
@@ -253,8 +245,6 @@ public class RequeteLUGAP implements Requete, Serializable
         }
         catch (SQLException ex)
         {
-            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
             Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -294,6 +284,11 @@ public class RequeteLUGAP implements Requete, Serializable
     public void addChargeUtile(String charge)
     {
         this.chargeUtile += ""+sepChamp+charge;
+    }
+    
+    public void addSepListe(String charge)
+    {
+        this.chargeUtile += ""+sepList;
     }
     
     public Socket getSocketClient() {

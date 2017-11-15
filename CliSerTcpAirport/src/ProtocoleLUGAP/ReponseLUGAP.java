@@ -30,7 +30,10 @@ public class ReponseLUGAP implements Reponse, Serializable{
         strTok = new StringTokenizer(chargeUtile, sepChamp+"");
     }
     
-    
+    public ReponseLUGAP(int codeRetour) {
+        this.codeRetour = codeRetour;
+        this.chargeUtile = null;
+    }
     
     //<editor-fold defaultstate="collapsed" desc="Getter et Setter">
     @Override
@@ -40,7 +43,10 @@ public class ReponseLUGAP implements Reponse, Serializable{
     
     public void addChargeUtile(String charge)
     {
-        this.chargeUtile += ""+sepChamp+charge;
+        if(chargeUtile!= null)
+            this.chargeUtile += ""+sepChamp+charge;
+        else
+            this.chargeUtile = charge;
     }
 
     public String nextToken()
@@ -63,6 +69,11 @@ public class ReponseLUGAP implements Reponse, Serializable{
             return strTok.nextToken(sepList+"");
         }
         return null;
+    }
+    
+    public void addSepListe()
+    {
+        this.chargeUtile += ""+sepList;
     }
     
     public int getCodeRetour() {

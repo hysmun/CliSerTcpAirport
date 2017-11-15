@@ -29,14 +29,19 @@ public class ClientBagages extends javax.swing.JFrame {
      * Creates new form ClientBagages
      */
     public Socket CS;
-    public ObjectOutputStream oos;
-    public ObjectInputStream ois;
+    public ObjectOutputStream oos=null;
+    public ObjectInputStream ois=null;
     
     public ClientBagages() {
-        initComponents();
-        setTitle("Interface client");
-        setLocationRelativeTo(null);
-        refreshListBagage();
+        try {
+            initComponents();
+            setTitle("Interface client");
+            setLocationRelativeTo(null);
+            CS = new Socket("localhost",3580);
+            refreshListBagage();
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public ClientBagages(Socket tcs) {
@@ -59,7 +64,7 @@ public class ClientBagages extends javax.swing.JFrame {
     public void refreshListBagage()
     {
         try {
-            CS = new Socket("localhost",3580);
+            
             String stringRes;
             ArrayList<ArrayList> listOfLists = null;
             TableModel tdm;
@@ -72,19 +77,16 @@ public class ClientBagages extends javax.swing.JFrame {
             if(ois == null)
                 ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
-            System.out.println("Liste result obtenu");
+            System.out.println("Liste result obtenu"+rep.getChargeUtile());
             stringRes = rep.getChargeUtile();
-            byte[] byteArrayFromString = stringRes.getBytes();
-            ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayFromString);
-            ObjectInputStream tmpoos = new ObjectInputStream(bais);
             
-            listOfLists = (ArrayList<ArrayList>)tmpoos.readObject();
             System.out.println("Liste result obtenu2");
             tdm = FlightTable.getModel();
-            for(int i=0; i<listOfLists.size(); i++)
+            int nombre = Integer.parseInt(rep.nextToken());
+            for(int i=0; i<nombre; i++)
             {
-                tdm.setValueAt(listOfLists.get(i).get(0), i, 0);
-                tdm.setValueAt(listOfLists.get(i).get(1), i, 1);
+                tdm.setValueAt(rep.nextToken(), i, 0);
+                tdm.setValueAt(rep.nextToken(), i, 1);
             }
             FlightTable.setModel(tdm);
             System.out.println("fin dtm");
@@ -125,7 +127,24 @@ public class ClientBagages extends javax.swing.JFrame {
             new String [] {
                 "idVol", "Nom"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        FlightTable.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                FlightTableAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         FlightTableScrollPane.setViewportView(FlightTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -154,6 +173,15 @@ public class ClientBagages extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void FlightTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_FlightTableAncestorAdded
+        // TODO add your handling code here:
+        //FlightTable.isRowSelected(ERROR);
+        System.out.println("Evenement");
+        int selRow = FlightTable.getSelectedRow();
+        GestionValise gv = new GestionValise(this, true);
+        gv.setVisible(true);
+    }//GEN-LAST:event_FlightTableAncestorAdded
 
     /**
      * @param args the command line arguments
