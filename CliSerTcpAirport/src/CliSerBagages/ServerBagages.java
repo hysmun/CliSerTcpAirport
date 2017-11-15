@@ -30,7 +30,8 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     @Override
     public void TraceEvenements(String message) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
-        LogsArea.insert(sdf.format(ts)+message, LogsArea.getCaretPosition());
+        LogsArea.insert(sdf.format(ts)+message+"\n", LogsArea.getCaretPosition());
+        System.out.println(sdf.format(ts)+message);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -116,11 +117,11 @@ public class ServerBagages extends javax.swing.JFrame implements ConsoleServeur 
     }// </editor-fold>//GEN-END:initComponents
 
     private void StartServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerButtonActionPerformed
-        TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
-        TraceEvenements("Démarrage serveur demandé\n");
+        TraceEvenements("Nombre threads : " + Thread.activeCount());
+        TraceEvenements("Démarrage serveur demandé");
         threadServ = new ThreadServeur(3580,new ListeTaches(),this);
         threadServ.start();
-        TraceEvenements("Nombre threads : " + Thread.activeCount()+"\n");
+        TraceEvenements("Nombre threads : " + Thread.activeCount());
     }//GEN-LAST:event_StartServerButtonActionPerformed
 
     /**

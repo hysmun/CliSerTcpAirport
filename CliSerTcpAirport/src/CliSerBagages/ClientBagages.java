@@ -5,6 +5,9 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.*;
+import java.net.Socket;
+
 /**
  *
  * @author Rémy
@@ -14,10 +17,20 @@ public class ClientBagages extends javax.swing.JFrame {
     /**
      * Creates new form ClientBagages
      */
+    Socket cs;
+    
     public ClientBagages() {
         initComponents();
         setTitle("Interface client");
         setLocationRelativeTo(null);
+    }
+    
+    public ClientBagages(Socket tcs) {
+        initComponents();
+        setTitle("Interface client");
+        setLocationRelativeTo(null);
+        cs = tcs;
+        RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
     }
 
     /**

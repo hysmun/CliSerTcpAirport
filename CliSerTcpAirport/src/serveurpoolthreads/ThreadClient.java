@@ -26,8 +26,8 @@ public class ThreadClient extends Thread
         {
             try
             {
-                System.out.println("Tread client avant get");
-                this.wait();
+                //System.out.println("Tread client avant get" + nom);
+                //this.wait();
                 tacheEnCours = tachesAExecuter.getTache();
             }
             catch (InterruptedException e)
@@ -35,7 +35,7 @@ public class ThreadClient extends Thread
                 System.out.println("Interruption thread num "+ this.nom + " : " + e.getMessage());
                 Thread.currentThread().interrupt();
             }
-            System.out.println("run de tachesencours");
+            //System.out.println("run de tachesencours"+nom);
             tacheEnCours.run();
         }
     }

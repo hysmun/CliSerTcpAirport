@@ -5,6 +5,8 @@
  */
 package CliSerBagages;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import serveurpoolthreads.ConsoleServeur;
 
 /**
@@ -17,7 +19,19 @@ public class applicMain {
     public static void main(String[] args) {
         LoginForm lf = new LoginForm(null,true);
         lf.setVisible(true);
-
+        
+        while(lf.isVisible() == true)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        ClientBagages cb = new ClientBagages(lf.CSocket);
+        cb.setVisible(true);
+        
     }
     
 }

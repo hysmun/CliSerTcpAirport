@@ -5,10 +5,16 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.ReponseLUGAP;
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,8 +22,10 @@ import java.net.Socket;
  */
 public class LoginForm extends javax.swing.JDialog {
 
-    private Socket CSocket;
+    public Socket CSocket;
     private ObjectOutputStream oos;
+    private ObjectInputStream ois;
+    public boolean loginReussi;
     
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -30,6 +38,7 @@ public class LoginForm extends javax.swing.JDialog {
         {
             System.out.println("Erreur connexion client -> serveur : " + e.getMessage());
         }
+        loginReussi=false;
     }
 
     /**
@@ -115,16 +124,36 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
-        //RequeteLUGAP req = new RequeteLUGAP();
+        RequeteLUGAP req = new RequeteLUGAP(LoginTextField.getText(), PasswdField.getText());
+        ReponseLUGAP rep = null;
         try
         {
             oos = new ObjectOutputStream(CSocket.getOutputStream());
-           // oos.writeObject(req);
+            oos.writeObject(req);
+            System.out.println("Client envois messages login");
+            ois = new ObjectInputStream(CSocket.getInputStream());
+            rep = (ReponseLUGAP)ois.readObject();
+            
+            if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
+            {
+                loginReussi = true;
+                JOptionPane.showMessageDialog(this,"Login reussi !!");
+                setVisible(false);
+            }
+            if(rep.getCode() == ReponseLUGAP.CONNECTION_KO)
+            {
+                loginReussi = false;
+                JOptionPane.showMessageDialog(this,"Login Rater");
+                setVisible(false);
+            }
         }
         catch(IOException e)
         {
             System.out.println("Erreur write obj client : " + e.getMessage());
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, e);
             System.exit(0);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_OKButtonActionPerformed
