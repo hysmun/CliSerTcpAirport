@@ -44,12 +44,13 @@ public class RequeteLUGAP implements Requete, Serializable
     private int type;
     private String chargeUtile;
     private Socket socketClient;
-    private StringTokenizer strTok;
+    private transient StringTokenizer strTok;
     
 
     public RequeteLUGAP(int type, String chargeUtile) {
         this.type = type;
         this.chargeUtile = chargeUtile;
+        strTok = new StringTokenizer(chargeUtile, sepChamp+"");
     }
     
     public RequeteLUGAP(String login, String motdepasse) {
@@ -148,33 +149,38 @@ public class RequeteLUGAP implements Requete, Serializable
     
     private void traiteRequeteLogin(Socket sock, ConsoleServeur cs)
     {
-        String loginT="user", mdpT="user", digest = "";
+        String loginT="user", mdpT="user", digest = "", tmpS=null;
         long temps = 0;
         double alea = 0;
         int ttype = ReponseLUGAP.CONNECTION_KO;
         String adresseDistante = sock.getRemoteSocketAddress().toString();
         /* recherche login mdp*/
-        cs.TraceEvenements(adresseDistante+"#charge utile "+ getChargeUtile()+"#"+Thread.currentThread().getName());
+        cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
 
-
-        if(loginT.equals(nextToken()))
+        tmpS = nextToken();
+        //cs.TraceEvenements("Login = " + tmpS);
+        if(loginT.equals(tmpS))
         {
             //login ok
             //creation du digest
-             try {
-                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  DataOutputStream bdos = new DataOutputStream(baos);
-                  bdos.writeLong(temps); bdos.writeDouble(alea);
-                  MessageDigest md = MessageDigest.getInstance("SHA-1");
-                  md.update(mdpT.getBytes());
-                  md.update(baos.toByteArray());
-                  digest = new String(md.digest());
-              } catch (NoSuchAlgorithmException ex) {
-                  Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
-              } catch (IOException ex) {
+            try {
+                temps = Long.parseLong(nextToken());
+                alea = Double.parseDouble(nextToken());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                DataOutputStream bdos = new DataOutputStream(baos);
+                bdos.writeLong(temps); bdos.writeDouble(alea);
+                MessageDigest md = MessageDigest.getInstance("SHA-1");
+                md.update(mdpT.getBytes());
+                md.update(baos.toByteArray());
+                digest = new String(md.digest());
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
                 Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(digest.equals(nextToken()))
+            tmpS = nextToken();
+            //cs.TraceEvenements("Digest = "+ digest + " - " +tmpS);
+            if(digest.equals(tmpS))
             {
                 //digest le même
                 ttype = ReponseLUGAP.CONNECTION_OK;
@@ -237,7 +243,7 @@ public class RequeteLUGAP implements Requete, Serializable
     
     public void addChargeUtile(String charge)
     {
-        this.chargeUtile += sepChamp+charge;
+        this.chargeUtile += ""+sepChamp+charge;
     }
     
     public Socket getSocketClient() {
@@ -250,6 +256,8 @@ public class RequeteLUGAP implements Requete, Serializable
     
     public String nextToken()
     {
+        if(strTok == null)
+            strTok = new StringTokenizer(chargeUtile, sepChamp+"");
         if(strTok != null)
         {
             return strTok.nextToken();
@@ -259,6 +267,8 @@ public class RequeteLUGAP implements Requete, Serializable
     
     public String nextTokenListe()
     {
+        if(strTok == null)
+            strTok = new StringTokenizer(chargeUtile, sepChamp+"");
         if(strTok != null)
         {
             return strTok.nextToken(sepList+"");

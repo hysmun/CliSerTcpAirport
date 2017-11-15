@@ -74,7 +74,7 @@ public class ThreadServeur extends Thread
             try
             {
                 /*try {
-                    Thread.sleep(1000000);
+                    Thread.sleep(10000000);
                 } catch (InterruptedException ex) {
                     exit(0);
                 }*/

@@ -150,6 +150,7 @@ public class LoginForm extends javax.swing.JDialog {
         catch(IOException e)
         {
             System.out.println("Erreur write obj client : " + e.getMessage());
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, e);
             System.exit(0);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);

@@ -22,7 +22,7 @@ public class ReponseLUGAP implements Reponse, Serializable{
 
     private int codeRetour;
     private String chargeUtile;
-    private StringTokenizer strTok;
+    private transient StringTokenizer strTok;
 
     public ReponseLUGAP(int codeRetour, String chargeUtile) {
         this.codeRetour = codeRetour;
