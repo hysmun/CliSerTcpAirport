@@ -13,6 +13,8 @@ import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.security.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
  * @author 'Toine
@@ -198,33 +200,41 @@ public class RequeteLUGAP implements Requete, Serializable
         }
     }
    
-   private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
-   {
-       String loginT="user", mdpT="user", digest = "", tmpS=null;
-        long temps = 0;
-        double alea = 0;
-        int ttype = ReponseLUGAP.CONNECTION_KO;
-        String adresseDistante = sock.getRemoteSocketAddress().toString();
-        /* recherche login mdp*/
-        cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
-
-        //liste
-        
-        
-        //reponse !
-        ReponseLUGAP repLugap = new ReponseLUGAP(ttype, chargeUtile);
-        ObjectOutputStream oos;
+    private void traiteRequeteListeVols(Socket sock, ConsoleServeur cs)
+    {
         try
         {
-            oos = new ObjectOutputStream(sock.getOutputStream());
-            oos.writeObject(repLugap); oos.flush();
-            oos.close();
+            String loginT="user", mdpT="user", digest = "", tmpS=null;
+            long temps = 0;
+            double alea = 0;
+            int ttype = ReponseLUGAP.CONNECTION_KO;
+            ResultSet rs;
+            String adresseDistante = sock.getRemoteSocketAddress().toString();
+            /* recherche login mdp*/
+            cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+            
+            //liste
+            rs = BDConnection.query("SELECT * FROM vols");
+            
+            //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype, rs.toString());
+            ObjectOutputStream oos;
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(repLugap); oos.flush();
+                oos.close();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
         }
-        catch (IOException e)
+        catch (SQLException ex)
         {
-            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
         }
-   }
+    }
    
    private void traiteRequeteReceptionBagage(Socket sock, ConsoleServeur cs)
    {

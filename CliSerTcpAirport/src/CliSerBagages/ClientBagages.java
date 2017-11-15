@@ -6,12 +6,17 @@
 package CliSerBagages;
 
 import ProtocoleLUGAP.*;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -48,14 +53,33 @@ public class ClientBagages extends javax.swing.JFrame {
     public void refreshListBagage()
     {
         try {
+            String stringRes;
+            ResultSet rs;
+            ResultSetMetaData rsmd;
+            TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
             oos.writeObject(req);
+            rep = (ReponseLUGAP)ois.readObject();
+            
+            stringRes = rep.getChargeUtile();
+            byte[] byteArrayFromString = stringRes.getBytes();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayFromString);
+            ObjectInputStream tmpoos = new ObjectInputStream(bais);
+            
+            rs = (ResultSet)tmpoos.readObject();
+            tdm = FlightTable.getModel();
+            rsmd = rs.getMetaData();
+            rs.next();
+            for()
+            tdm.setValueAt(bais, WIDTH, ICONIFIED);
             
             rep = (ReponseLUGAP)ois.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

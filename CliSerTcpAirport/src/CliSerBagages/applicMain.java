@@ -31,6 +31,7 @@ public class applicMain {
         
         ClientBagages cb = new ClientBagages(lf.CSocket);
         cb.setVisible(true);
+        cb.refreshListBagage();
         
     }
     
