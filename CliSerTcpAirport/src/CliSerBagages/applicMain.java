@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bouncycastle.asn1.crmf.POPOPrivKey;
 import serveurpoolthreads.*;
 
 /**
@@ -45,8 +46,8 @@ public class applicMain {
             
             System.out.println("Crea login");
             LoginForm lf = new LoginForm(null,true);
-            lf.CS = cs;
             
+            lf.CS = cs;
             lf.setVisible(true);
             
             
@@ -62,12 +63,10 @@ public class applicMain {
             oos = lf.oos;
             ois = lf.ois;
             
-            ClientBagages cb = new ClientBagages(cs);
-            lf.CS = cs;
-            lf.oos = oos;
-            lf.ois = ois;
+            ClientBagages cb = new ClientBagages(cs, oos, ois);
+            cb.oos = oos;
+            cb.ois = ois;
             cb.setVisible(true);
-            cb.refreshListBagage();
             
         }
         catch (Exception ex)
