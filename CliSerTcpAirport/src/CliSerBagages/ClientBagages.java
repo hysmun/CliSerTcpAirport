@@ -27,7 +27,9 @@ public class ClientBagages extends javax.swing.JFrame {
     /**
      * Creates new form ClientBagages
      */
-    applicMain ap;
+    public Socket CS;
+    public ObjectOutputStream oos;
+    public ObjectInputStream ois;
     
     public ClientBagages() {
         initComponents();
@@ -35,11 +37,17 @@ public class ClientBagages extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
     
-    public ClientBagages(applicMain appM) {
-        initComponents();
-        setTitle("Interface client");
-        setLocationRelativeTo(null);
-        ap = appM;
+    public ClientBagages(Socket tcs) {
+        try {
+            initComponents();
+            setTitle("Interface client");
+            setLocationRelativeTo(null);
+            CS = tcs;
+            oos = new ObjectOutputStream(CS.getOutputStream());
+            ois = new ObjectInputStream(CS.getInputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void refreshListBagage()
@@ -51,8 +59,8 @@ public class ClientBagages extends javax.swing.JFrame {
             TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
-            applicMain.oos.writeObject(req);
-            rep = (ReponseLUGAP)applicMain.ois.readObject();
+            oos.writeObject(req);
+            rep = (ReponseLUGAP)ois.readObject();
             
             stringRes = rep.getChargeUtile();
             byte[] byteArrayFromString = stringRes.getBytes();

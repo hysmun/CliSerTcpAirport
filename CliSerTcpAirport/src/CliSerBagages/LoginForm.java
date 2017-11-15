@@ -8,6 +8,9 @@ package CliSerBagages;
 import ProtocoleLUGAP.ReponseLUGAP;
 import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,7 +23,9 @@ public class LoginForm extends javax.swing.JDialog {
 
     
     public boolean loginReussi;
-    public applicMain ap;
+    public Socket CS;
+    public ObjectOutputStream oos;
+    public ObjectInputStream ois;
     
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -115,11 +120,17 @@ public class LoginForm extends javax.swing.JDialog {
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         RequeteLUGAP req = new RequeteLUGAP(LoginTextField.getText(), PasswdField.getText());
         ReponseLUGAP rep = null;
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
         try
         {
-            applicMain.oos.writeObject(req);
+            System.out.println("Client avant stream");
+            oos = new ObjectOutputStream(CS.getOutputStream());
+            ois = new ObjectInputStream(CS.getInputStream());
+            System.out.println("Client avant stream-----");
+            oos.writeObject(req);
             System.out.println("Client envois messages login");
-            rep = (ReponseLUGAP)applicMain.ois.readObject();
+            rep = (ReponseLUGAP)ois.readObject();
             if(rep.getCode() == ReponseLUGAP.CONNECTION_OK)
             {
                 loginReussi = true;
@@ -132,7 +143,6 @@ public class LoginForm extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this,"Login Rater");
                 setVisible(false);
             }
-            
         }
         catch(IOException e)
         {
