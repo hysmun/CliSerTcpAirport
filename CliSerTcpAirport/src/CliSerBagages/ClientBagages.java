@@ -65,7 +65,7 @@ public class ClientBagages extends javax.swing.JFrame {
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEVOLS);
             ReponseLUGAP rep = null;
             //oos = new ObjectOutputStream(CS.getOutputStream());
-            oos.writeObject(req);
+            oos.writeObject(req);oos.flush();
             //ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
             

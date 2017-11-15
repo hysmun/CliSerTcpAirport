@@ -126,7 +126,7 @@ public class LoginForm extends javax.swing.JDialog {
             oos = new ObjectOutputStream(CS.getOutputStream());
             
             System.out.println("Client avant stream-----");
-            oos.writeObject(req);
+            oos.writeObject(req);oos.flush();
             System.out.println("Client envois messages login");
             ois = new ObjectInputStream(CS.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
