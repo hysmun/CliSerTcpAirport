@@ -33,13 +33,6 @@ public class applicMain {
             try
             {
                 cs = new Socket("localhost",3580);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                oos = new ObjectOutputStream(cs.getOutputStream());
-                ois = new ObjectInputStream(cs.getInputStream());
                  
             }
             catch (IOException e)
