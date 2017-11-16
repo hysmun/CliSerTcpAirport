@@ -38,8 +38,9 @@ public class RequeteLUGAP implements Requete, Serializable
     public static int REQUEST_LISTEVOLS     = 2;
     public static int REQUEST_LISTEBAGAGE   = 3;
     public static int REQUEST_RECEPBAGAGE   = 4;
-    public static int REQUEST_VERIFBAGAGE   = 4;
-    public static int REQUEST_CHARGBAGAGE   = 4;
+    public static int REQUEST_VERIFBAGAGE   = 5;
+    public static int REQUEST_CHARGBAGAGE   = 6;
+    public static int REQUEST_REFUSBAGAGE   = 7;
     
     public static char sepChamp = '#';
     public static char sepList = '|';
@@ -312,17 +313,138 @@ public class RequeteLUGAP implements Requete, Serializable
    
    private void traiteRequeteReceptionBagage(Socket sock, ConsoleServeur cs)
    {
-       
+       try
+        {
+            String loginT="user", mdpT="user", digest = "", tmpS=null;
+            long temps = 0;
+            double alea = 0;
+            int ttype = ReponseLUGAP.CONNECTION_KO;
+            ResultSet rs;
+            String adresseDistante = sock.getRemoteSocketAddress().toString();
+            /* recherche login mdp*/
+            cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+            
+            //liste
+            tmpS = "UPDATE `bd_airport`.`bagages` SET `receptionne`='O' WHERE `idBagages`='"+ getChargeUtile()+"';";
+            System.out.println(tmpS);
+            BDConnection.update(tmpS);
+            BDConnection.getCon().commit();
+                     
+            
+            //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype, getChargeUtile());
+            ObjectOutputStream oos;
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(repLugap); oos.flush();
+                oos.close();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
    }
    
    private void traiteRequeteVerificationBagage(Socket sock, ConsoleServeur cs)
    {
-       
+       try
+        {
+            String loginT="user", mdpT="user", digest = "", tmpS=null;
+            long temps = 0;
+            double alea = 0;
+            int ttype = ReponseLUGAP.CONNECTION_KO;
+            ResultSet rs;
+            String adresseDistante = sock.getRemoteSocketAddress().toString();
+            /* recherche login mdp*/
+            cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+            
+            //liste
+            rs = BDConnection.query("SELECT * FROM vols");
+            
+            //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
+            ResultSetMetaData metaData = rs.getMetaData();
+            int number;
+            rs.last();
+            number = rs.getRow();
+            rs.beforeFirst();
+            repLugap.addChargeUtile(""+number);
+            while (rs.next()) {
+                for (int i = 1; i < 3; i++) {
+                    repLugap.addChargeUtile(rs.getObject(i).toString());
+                }
+            }
+            System.out.println("Nombre : "+number+"  ");
+            ObjectOutputStream oos;
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(repLugap); oos.flush();
+                oos.close();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
    }
    
    private void traiteRequeteChargementBagage(Socket sock, ConsoleServeur cs)
    {
-       
+       try
+        {
+            String loginT="user", mdpT="user", digest = "", tmpS=null;
+            long temps = 0;
+            double alea = 0;
+            int ttype = ReponseLUGAP.CONNECTION_KO;
+            ResultSet rs;
+            String adresseDistante = sock.getRemoteSocketAddress().toString();
+            /* recherche login mdp*/
+            cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+            
+            //liste
+            rs = BDConnection.query("SELECT * FROM vols");
+            
+            //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
+            ResultSetMetaData metaData = rs.getMetaData();
+            int number;
+            rs.last();
+            number = rs.getRow();
+            rs.beforeFirst();
+            repLugap.addChargeUtile(""+number);
+            while (rs.next()) {
+                for (int i = 1; i < 3; i++) {
+                    repLugap.addChargeUtile(rs.getObject(i).toString());
+                }
+            }
+            System.out.println("Nombre : "+number+"  ");
+            ObjectOutputStream oos;
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(repLugap); oos.flush();
+                oos.close();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
    }
 
 //<editor-fold defaultstate="collapsed" desc="Getter et Setter">
