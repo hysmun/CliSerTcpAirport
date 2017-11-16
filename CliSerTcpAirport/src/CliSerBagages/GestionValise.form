@@ -6,7 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -23,9 +23,30 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="800" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="receptionB" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="138" max="-2" attributes="0"/>
+                              <Component id="alertB" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
+                              <Component id="chargementB" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="353" max="-2" attributes="0"/>
+                              <Component id="validerB" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="178" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -33,8 +54,16 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="378" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="receptionB" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="alertB" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chargementB" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="407" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+              <Component id="validerB" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -48,22 +77,54 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="BagageTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="7" rowCount="4">
-                <Column editable="true" title="Identifiant" type="java.lang.String"/>
-                <Column editable="true" title="Poids" type="java.lang.Double"/>
-                <Column editable="true" title="Type" type="java.lang.String"/>
-                <Column editable="true" title="Receptionne" type="java.lang.String"/>
-                <Column editable="true" title="Charge en soute" type="java.lang.String"/>
-                <Column editable="true" title="Verifier par la douane" type="java.lang.String"/>
-                <Column editable="true" title="Remarques" type="java.lang.String"/>
+              <Table columnCount="7" rowCount="15">
+                <Column editable="false" title="Identifiant" type="java.lang.String"/>
+                <Column editable="false" title="Poids" type="java.lang.String"/>
+                <Column editable="false" title="Type" type="java.lang.String"/>
+                <Column editable="false" title="Receptionne" type="java.lang.String"/>
+                <Column editable="false" title="Charge en soute" type="java.lang.String"/>
+                <Column editable="false" title="Verifier par la douane" type="java.lang.String"/>
+                <Column editable="false" title="Remarques" type="java.lang.String"/>
               </Table>
             </Property>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="receptionB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="reception"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="receptionBMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="alertB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="alerter douane"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="alertBMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="chargementB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="chargement soute"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="chargementBMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="validerB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Valider"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="validerBMouseClicked"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

@@ -115,7 +115,7 @@ public class RequeteLUGAP implements Requete, Serializable
             {
                 public void run()
                 {
-                    traiteRequeteListeVols(s, cs);
+                    traiteRequeteListeBagage(s, cs);
                 }
             };
         if (type==REQUEST_RECEPBAGAGE)
@@ -228,6 +228,67 @@ public class RequeteLUGAP implements Requete, Serializable
             while (rs.next()) {
                 for (int i = 1; i < 3; i++) {
                     repLugap.addChargeUtile(rs.getObject(i).toString());
+                }
+            }
+            System.out.println("Nombre : "+number+"  ");
+            ObjectOutputStream oos;
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(repLugap); oos.flush();
+                oos.close();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(RequeteLUGAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void traiteRequeteListeBagage(Socket sock, ConsoleServeur cs)
+    {
+        try
+        {
+            String loginT="user", mdpT="user", digest = "", tmpS=null;
+            long temps = 0;
+            double alea = 0;
+            int ttype = ReponseLUGAP.CONNECTION_KO;
+            ResultSet rs;
+            String adresseDistante = sock.getRemoteSocketAddress().toString();
+            /* recherche login mdp*/
+            cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
+            
+            //liste
+            tmpS = "SELECT bagages.idBagages, valise, poids, receptionne, chargeSoute, verifDouane, remarques FROM bagages " 
+                    +"JOIN ( SELECT * FROM billets WHERE idVols = \'"+getChargeUtile()+"\') as jointure ON bagages.idBagages = jointure.idBagages;";
+            System.out.println(tmpS);  
+            rs = BDConnection.query(tmpS);
+                     
+            
+            //reponse !
+            ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
+            ResultSetMetaData metaData = rs.getMetaData();
+            int number;
+            rs.last();
+            number = rs.getRow();
+            rs.beforeFirst();
+            repLugap.addChargeUtile(""+number);
+            String[] nameCol = new String[7];
+            nameCol[0] = "idBagages";nameCol[1]="poids";nameCol[2]="valise";nameCol[3]="receptionne";nameCol[4]="chargeSoute";nameCol[5]="verifDouane";nameCol[6]="remarques";
+            while (rs.next()) {
+                for (int i = 0; i < 7; i++) {
+                    try
+                    {       
+                        repLugap.addChargeUtile(rs.getString(nameCol[i]));
+                    }
+                    catch(Exception e)
+                    {
+                        repLugap.addChargeUtile("null");
+                    }
                 }
             }
             System.out.println("Nombre : "+number+"  ");

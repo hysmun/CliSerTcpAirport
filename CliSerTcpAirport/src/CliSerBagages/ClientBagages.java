@@ -6,17 +6,14 @@
 package CliSerBagages;
 
 import ProtocoleLUGAP.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 /**
@@ -122,6 +119,22 @@ public class ClientBagages extends javax.swing.JFrame {
                 {null, null},
                 {null, null},
                 {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
                 {null, null}
             },
             new String [] {
@@ -136,13 +149,9 @@ public class ClientBagages extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        FlightTable.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                FlightTableAncestorAdded(evt);
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+        FlightTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FlightTableMouseClicked(evt);
             }
         });
         FlightTableScrollPane.setViewportView(FlightTable);
@@ -174,14 +183,17 @@ public class ClientBagages extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void FlightTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_FlightTableAncestorAdded
+    private void FlightTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FlightTableMouseClicked
         // TODO add your handling code here:
-        //FlightTable.isRowSelected(ERROR);
-        System.out.println("Evenement");
-        int selRow = FlightTable.getSelectedRow();
-        GestionValise gv = new GestionValise(this, true);
-        gv.setVisible(true);
-    }//GEN-LAST:event_FlightTableAncestorAdded
+        if(evt.getClickCount() > 1)
+        {
+            System.out.println("Evenement Click");
+            JTable jt = (JTable)evt.getSource();
+            int selRow = jt.getSelectedRow();
+            GestionValise gv = new GestionValise(this, true, (String)jt.getValueAt(selRow, 0));
+            gv.setVisible(true);
+        }
+    }//GEN-LAST:event_FlightTableMouseClicked
 
     /**
      * @param args the command line arguments

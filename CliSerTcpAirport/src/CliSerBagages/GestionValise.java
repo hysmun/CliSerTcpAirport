@@ -5,6 +5,14 @@
  */
 package CliSerBagages;
 
+import ProtocoleLUGAP.*;
+import java.io.*;
+import java.net.Socket;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author 'Toine
@@ -14,9 +22,22 @@ public class GestionValise extends javax.swing.JDialog {
     /**
      * Creates new form GestionValise
      */
+    
+    public Socket CS;
+    public ObjectOutputStream oos=null;
+    public ObjectInputStream ois=null;
+    public String idVols;
+    
     public GestionValise(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+    
+    public GestionValise(java.awt.Frame parent, boolean modal, String tident) {
+        super(parent, modal);
+        initComponents();
+        idVols = tident;
+        refreshListBagage();
     }
 
     /**
@@ -29,12 +50,27 @@ public class GestionValise extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        BagageTable = new javax.swing.JTable();
+        receptionB = new javax.swing.JButton();
+        alertB = new javax.swing.JButton();
+        chargementB = new javax.swing.JButton();
+        validerB = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        BagageTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -45,34 +81,108 @@ public class GestionValise extends javax.swing.JDialog {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(BagageTable);
+
+        receptionB.setText("reception");
+        receptionB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                receptionBMouseClicked(evt);
+            }
+        });
+
+        alertB.setText("alerter douane");
+        alertB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                alertBMouseClicked(evt);
+            }
+        });
+
+        chargementB.setText("chargement soute");
+        chargementB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chargementBMouseClicked(evt);
+            }
+        });
+
+        validerB.setText("Valider");
+        validerB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                validerBMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(receptionB)
+                                .addGap(138, 138, 138)
+                                .addComponent(alertB)
+                                .addGap(129, 129, 129)
+                                .addComponent(chargementB))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(353, 353, 353)
+                                .addComponent(validerB)))
+                        .addGap(0, 178, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(receptionB)
+                    .addComponent(alertB)
+                    .addComponent(chargementB))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addComponent(validerB)
                 .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void receptionBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_receptionBMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_receptionBMouseClicked
+
+    private void alertBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alertBMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_alertBMouseClicked
+
+    private void chargementBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chargementBMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chargementBMouseClicked
+
+    private void validerBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validerBMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_validerBMouseClicked
 
     /**
      * @param args the command line arguments
@@ -115,9 +225,53 @@ public class GestionValise extends javax.swing.JDialog {
             }
         });
     }
-
+    
+    public void refreshListBagage()
+    {
+        try {
+            CS = new Socket("localhost",3580);
+            String stringRes;
+            TableModel tdm;
+            RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEBAGAGE, idVols);
+            ReponseLUGAP rep = null;
+            System.out.println("crea flux");
+            if(oos == null)
+                oos = new ObjectOutputStream(CS.getOutputStream());
+            oos.writeObject(req);oos.flush();
+            if(ois == null)
+                ois = new ObjectInputStream(CS.getInputStream());
+            rep = (ReponseLUGAP)ois.readObject();
+            System.out.println("Liste result obtenu"+rep.getChargeUtile());
+            stringRes = rep.getChargeUtile();
+            
+            System.out.println("Liste result obtenu2");
+            tdm = BagageTable.getModel();
+            int nombre = Integer.parseInt(rep.nextToken());
+            for(int i=0; i<nombre; i++)
+            {
+                tdm.setValueAt(rep.nextToken(), i, 0);
+                tdm.setValueAt(rep.nextToken(), i, 1);
+                tdm.setValueAt(rep.nextToken(), i, 2);
+                tdm.setValueAt(rep.nextToken(), i, 3);
+                tdm.setValueAt(rep.nextToken(), i, 4);
+                tdm.setValueAt(rep.nextToken(), i, 5);
+                tdm.setValueAt(rep.nextToken(), i, 6);
+            }
+            BagageTable.setModel(tdm);
+            System.out.println("fin dtm");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable BagageTable;
+    private javax.swing.JButton alertB;
+    private javax.swing.JButton chargementB;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton receptionB;
+    private javax.swing.JButton validerB;
     // End of variables declaration//GEN-END:variables
 }
