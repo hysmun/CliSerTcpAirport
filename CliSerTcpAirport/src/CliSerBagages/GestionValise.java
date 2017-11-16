@@ -5,13 +5,21 @@
  */
 package CliSerBagages;
 
+import BDUtilities.BDUtilities;
 import ProtocoleLUGAP.*;
 import java.io.*;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import serveurpoolthreads.ThreadClient;
 
 /**
  *
@@ -22,7 +30,7 @@ public class GestionValise extends javax.swing.JDialog {
     /**
      * Creates new form GestionValise
      */
-    
+    static private BDUtilities BDConnection;
     public Socket CS;
     public ObjectOutputStream oos=null;
     public ObjectInputStream ois=null;
@@ -37,6 +45,12 @@ public class GestionValise extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         idVols = tident;
+        
+        try {
+            BDConnection = new BDUtilities("localhost", 5500);
+        } catch (Exception ex) {
+            Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
         refreshListBagage();
     }
 
@@ -55,6 +69,7 @@ public class GestionValise extends javax.swing.JDialog {
         alertB = new javax.swing.JButton();
         chargementB = new javax.swing.JButton();
         validerB = new javax.swing.JButton();
+        refuserSoute = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -125,6 +140,13 @@ public class GestionValise extends javax.swing.JDialog {
             }
         });
 
+        refuserSoute.setText("Refuser soute");
+        refuserSoute.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refuserSouteMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,16 +159,18 @@ public class GestionValise extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(353, 353, 353)
+                                .addComponent(validerB))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
                                 .addComponent(receptionB)
                                 .addGap(138, 138, 138)
                                 .addComponent(alertB)
-                                .addGap(129, 129, 129)
-                                .addComponent(chargementB))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(353, 353, 353)
-                                .addComponent(validerB)))
-                        .addGap(0, 178, Short.MAX_VALUE)))
+                                .addGap(92, 92, 92)
+                                .addComponent(chargementB)
+                                .addGap(65, 65, 65)
+                                .addComponent(refuserSoute)))
+                        .addGap(0, 39, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -156,7 +180,8 @@ public class GestionValise extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(receptionB)
                     .addComponent(alertB)
-                    .addComponent(chargementB))
+                    .addComponent(chargementB)
+                    .addComponent(refuserSoute))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
@@ -170,19 +195,196 @@ public class GestionValise extends javax.swing.JDialog {
 
     private void receptionBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_receptionBMouseClicked
         // TODO add your handling code here:
+        System.out.println("Evenement Click");
+        int selRow = BagageTable.getSelectedRow();
+        if(selRow != -1)
+        {
+            try {
+                if("N".equals(BagageTable.getValueAt(selRow, 3)))
+                {
+                    String stringRes, tmpS;
+                    TableModel tdm;
+                    String idBag = (String)BagageTable.getValueAt(selRow, 0);
+                    tmpS = "UPDATE `bd_airport`.`bagages` SET `receptionne`='O' WHERE `idBagages`='"+ idBag+"';";
+                    //System.out.println(tmpS);
+                    BDConnection.update(tmpS);
+                }
+                else
+                    JOptionPane.showMessageDialog(this,"Bagage deja receptionne");
+                //BDConnection.getCon().commit();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionValise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            refreshListBagage();
+        }
     }//GEN-LAST:event_receptionBMouseClicked
 
     private void alertBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alertBMouseClicked
         // TODO add your handling code here:
+        System.out.println("Evenement Click");
+        int selRow = BagageTable.getSelectedRow();
+        if(selRow != -1)
+        {
+            try {
+                if("O".equals(BagageTable.getValueAt(selRow, 3)))
+                {
+                    if("N".equals(BagageTable.getValueAt(selRow, 5)))
+                    {
+                        String stringRes, tmpS;
+                        TableModel tdm;
+                        String idBag = (String)BagageTable.getValueAt(selRow, 0);
+                        tmpS = "UPDATE `bd_airport`.`bagages` SET `verifDouane`='O' WHERE `idBagages`='"+ idBag+"';";
+                        //System.out.println(tmpS);
+                        BDConnection.update(tmpS);
+                        //BDConnection.getCon().commit();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    else
+                        JOptionPane.showMessageDialog(this,"Bagage deja verifier");
+                }
+                else
+                    JOptionPane.showMessageDialog(this,"Veuillez receptionne le bagage avant");
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionValise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            refreshListBagage();
+        }
     }//GEN-LAST:event_alertBMouseClicked
 
     private void chargementBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chargementBMouseClicked
         // TODO add your handling code here:
+        System.out.println("Evenement Click");
+        int selRow = BagageTable.getSelectedRow();
+        if(selRow != -1)
+        {
+            try {
+                if("O".equals(BagageTable.getValueAt(selRow, 3)))
+                {
+                    if("O".equals(BagageTable.getValueAt(selRow, 5)))
+                    {
+                        if("N".equals(BagageTable.getValueAt(selRow, 4)))
+                        {
+                            String stringRes, tmpS;
+                            TableModel tdm;
+                            String idBag = (String)BagageTable.getValueAt(selRow, 0);
+                            tmpS = "UPDATE `bd_airport`.`bagages` SET `chargeSoute`='O' WHERE `idBagages`='"+ idBag+"';";
+                            //System.out.println(tmpS);
+                            BDConnection.update(tmpS);
+                            //BDConnection.getCon().commit();
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(this,"Bagage deja charger ou refuser");
+                }
+                    else
+                        JOptionPane.showMessageDialog(this,"Veuillez verifier le bagage avant");
+                }
+                else
+                    JOptionPane.showMessageDialog(this,"Veuillez receptionne le bagage avant");
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionValise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            refreshListBagage();
+        }
     }//GEN-LAST:event_chargementBMouseClicked
 
     private void validerBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validerBMouseClicked
         // TODO add your handling code here:
+        System.out.println("Evenement Click");
+        int selRow = BagageTable.getSelectedRow();
+        boolean valid=false;
+        
+        for(int i=0; i<BagageTable.getRowCount(); i++)
+        {
+            if("O".equals(BagageTable.getValueAt(i, 3)))
+            {
+                if("O".equals(BagageTable.getValueAt(i, 4)) || "R".equals(BagageTable.getValueAt(i, 4)))
+                {
+                    if("O".equals(BagageTable.getValueAt(i, 5)))
+                    {
+                        valid=true;
+                    }
+                    else
+                    {
+                        i=BagageTable.getRowCount()+1;
+                        JOptionPane.showMessageDialog(this,"Veuillez valider les bagages avant !");
+                    }
+                }
+                else
+                {
+                    i=BagageTable.getRowCount()+1;
+                    JOptionPane.showMessageDialog(this,"Veuillez valider les bagages avant !");
+                }
+            }
+            else
+            {
+                i=BagageTable.getRowCount()+1;
+                JOptionPane.showMessageDialog(this,"Veuillez valider les bagages avant !");
+            }
+        }
+        if(valid == true)
+        {
+            JOptionPane.showMessageDialog(this,"Valider");
+            this.dispose();
+        }
     }//GEN-LAST:event_validerBMouseClicked
+
+    private void refuserSouteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refuserSouteMouseClicked
+        // TODO add your handling code here:
+        System.out.println("Evenement Click");
+        int selRow = BagageTable.getSelectedRow();
+        if(selRow != -1)
+        {
+            try {
+                if("O".equals(BagageTable.getValueAt(selRow, 3)))
+                {
+                    if("O".equals(BagageTable.getValueAt(selRow, 5)))
+                    {
+                        if("N".equals(BagageTable.getValueAt(selRow, 4)))
+                        {
+                            String stringRes, tmpS;
+                            TableModel tdm;
+                            String idBag = (String)BagageTable.getValueAt(selRow, 0);
+                            tmpS = "UPDATE `bd_airport`.`bagages` SET `chargeSoute`='R' WHERE `idBagages`='"+ idBag+"';";
+                            //System.out.println(tmpS);
+                            BDConnection.update(tmpS);
+                            //BDConnection.getCon().commit();
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(applicMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(this,"Bagage deja charger ou refuser");
+                }
+                    else
+                        JOptionPane.showMessageDialog(this,"Veuillez verifier le bagage avant");
+                }
+                else
+                    JOptionPane.showMessageDialog(this,"Veuillez receptionne le bagage avant");
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionValise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            refreshListBagage();
+        }
+    }//GEN-LAST:event_refuserSouteMouseClicked
 
     /**
      * @param args the command line arguments
@@ -228,42 +430,78 @@ public class GestionValise extends javax.swing.JDialog {
     
     public void refreshListBagage()
     {
-        try {
-            CS = new Socket("192.168.1.3",3580);
-            String stringRes;
-            TableModel tdm;
-            RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEBAGAGE, idVols);
-            ReponseLUGAP rep = null;
-            System.out.println("crea flux");
-            if(oos == null)
-                oos = new ObjectOutputStream(CS.getOutputStream());
-            oos.writeObject(req);oos.flush();
-            if(ois == null)
-                ois = new ObjectInputStream(CS.getInputStream());
-            rep = (ReponseLUGAP)ois.readObject();
-            System.out.println("Liste result obtenu"+rep.getChargeUtile());
-            stringRes = rep.getChargeUtile();
+        try { 
+            String tmpS = "SELECT bagages.idBagages, valise, poids, receptionne, chargeSoute, verifDouane, remarques FROM bagages "
+                    +"JOIN ( SELECT * FROM billets WHERE idVols = \'"+ idVols +"\') as jointure ON bagages.idBagages = jointure.idBagages;";
+            //System.out.println(tmpS);
+            ResultSet rs = BDConnection.query(tmpS);
             
-            System.out.println("Liste result obtenu2");
-            tdm = BagageTable.getModel();
-            int nombre = Integer.parseInt(rep.nextToken());
-            for(int i=0; i<nombre; i++)
-            {
-                tdm.setValueAt(rep.nextToken(), i, 0);
-                tdm.setValueAt(rep.nextToken(), i, 1);
-                tdm.setValueAt(rep.nextToken(), i, 2);
-                tdm.setValueAt(rep.nextToken(), i, 3);
-                tdm.setValueAt(rep.nextToken(), i, 4);
-                tdm.setValueAt(rep.nextToken(), i, 5);
-                tdm.setValueAt(rep.nextToken(), i, 6);
+            
+            //reponse !
+            ResultSetMetaData metaData = rs.getMetaData();
+            TableModel tdm = BagageTable.getModel();
+            int number;
+            rs.last();
+            number = rs.getRow();
+            rs.beforeFirst();
+            String[] nameCol = new String[7];
+            nameCol[0] = "idBagages";nameCol[1]="poids";nameCol[2]="valise";nameCol[3]="receptionne";nameCol[4]="chargeSoute";nameCol[5]="verifDouane";nameCol[6]="remarques";
+            for(int j=0; rs.next(); j++) {
+                for (int i = 0; i < 7; i++) {
+                    try
+                    {
+                        //rs.getString(nameCol[i]));
+                        tdm.setValueAt(rs.getString(nameCol[i]), j, i);
+                    }
+                    catch(Exception e)
+                    {
+                        //null
+                        tdm.setValueAt("null", j, i);
+                    }
+                }
             }
-            BagageTable.setModel(tdm);
-            System.out.println("fin dtm");
-        } catch (IOException ex) {
-            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestionValise.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*try {
+        CS = new Socket("localhost",3580);
+        String stringRes;
+        TableModel tdm;
+        RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEBAGAGE, idVols);
+        ReponseLUGAP rep = null;
+        System.out.println("crea flux");
+        if(oos == null)
+        oos = new ObjectOutputStream(CS.getOutputStream());
+        oos.writeObject(req);oos.flush();
+        if(ois == null)
+        ois = new ObjectInputStream(CS.getInputStream());
+        rep = (ReponseLUGAP)ois.readObject();
+        System.out.println("Liste result obtenu"+rep.getChargeUtile());
+        stringRes = rep.getChargeUtile();
+
+        System.out.println("Liste result obtenu2");
+        tdm = BagageTable.getModel();
+        int nombre = Integer.parseInt(rep.nextToken());
+        for(int i=0; i<nombre; i++)
+        {
+        tdm.setValueAt(rep.nextToken(), i, 0);
+        tdm.setValueAt(rep.nextToken(), i, 1);
+        tdm.setValueAt(rep.nextToken(), i, 2);
+        tdm.setValueAt(rep.nextToken(), i, 3);
+        tdm.setValueAt(rep.nextToken(), i, 4);
+        tdm.setValueAt(rep.nextToken(), i, 5);
+        tdm.setValueAt(rep.nextToken(), i, 6);
+        }
+        BagageTable.setModel(tdm);
+        System.out.println("fin dtm");
+        //oos.close();
+        //ois.close();
+
+        } catch (IOException ex) {
+        Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+        Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -272,6 +510,7 @@ public class GestionValise extends javax.swing.JDialog {
     private javax.swing.JButton chargementB;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton receptionB;
+    private javax.swing.JButton refuserSoute;
     private javax.swing.JButton validerB;
     // End of variables declaration//GEN-END:variables
 }
