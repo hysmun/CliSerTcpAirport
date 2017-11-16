@@ -30,7 +30,7 @@ public class applicMain {
             ObjectInputStream ois = null;
             try
             {
-                cs = new Socket("localhost",3580);
+                cs = new Socket("192.168.1.3",3580);
                 /*
                 ois = new ObjectInputStream(cs.getInputStream());
                 oos = new ObjectOutputStream(cs.getOutputStream());*/

@@ -27,7 +27,7 @@ public class RequeteLUGAP implements Requete, Serializable
     static
     {
         try {
-            BDConnection = new BDUtilities("localhost", 5500);
+            BDConnection = new BDUtilities("192.168.1.3", 5500);
         } catch (Exception ex) {
             Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
         }

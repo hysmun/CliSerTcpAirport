@@ -229,7 +229,7 @@ public class GestionValise extends javax.swing.JDialog {
     public void refreshListBagage()
     {
         try {
-            CS = new Socket("localhost",3580);
+            CS = new Socket("192.168.1.3",3580);
             String stringRes;
             TableModel tdm;
             RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LISTEBAGAGE, idVols);
