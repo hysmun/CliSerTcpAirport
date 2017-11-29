@@ -34,7 +34,7 @@ public class ClientBagages extends javax.swing.JFrame {
             initComponents();
             setTitle("Interface client");
             setLocationRelativeTo(null);
-            CS = new Socket("localhost",3580);
+            CS = new Socket("192.168.1.3",3580);
             refreshListBagage();
         } catch (IOException ex) {
             Logger.getLogger(ClientBagages.class.getName()).log(Level.SEVERE, null, ex);
