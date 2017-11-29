@@ -16,6 +16,7 @@ import java.security.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import javax.swing.table.TableModel;
 /**
  *
  * @author 'Toine
@@ -359,14 +360,17 @@ public class RequeteLUGAP implements Requete, Serializable
             long temps = 0;
             double alea = 0;
             int ttype = ReponseLUGAP.CONNECTION_KO;
-            ResultSet rs;
+            ResultSet rs = null;
             String adresseDistante = sock.getRemoteSocketAddress().toString();
             /* recherche login mdp*/
             cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
             
             //liste
-            rs = BDConnection.query("SELECT * FROM vols");
-            
+            String stringRes;
+            int idBagages=111;
+            tmpS = "UPDATE `bd_airport`.`bagages` SET `verifDouane`='O' WHERE `idBagages`='"+idBagages+"';";
+            //System.out.println(tmpS);
+            BDConnection.update(tmpS);
             //reponse !
             ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
             ResultSetMetaData metaData = rs.getMetaData();
@@ -407,13 +411,18 @@ public class RequeteLUGAP implements Requete, Serializable
             long temps = 0;
             double alea = 0;
             int ttype = ReponseLUGAP.CONNECTION_KO;
-            ResultSet rs;
+            ResultSet rs = null;
             String adresseDistante = sock.getRemoteSocketAddress().toString();
             /* recherche login mdp*/
             cs.TraceEvenements(adresseDistante+" -- charge utile "+ getChargeUtile()+" -- "+Thread.currentThread().getName());
             
             //liste
-            rs = BDConnection.query("SELECT * FROM vols");
+            String stringRes;
+            int idBag = 111;
+            tmpS = "UPDATE `bd_airport`.`bagages` SET `chargeSoute`='R' WHERE `idBagages`='"+ idBag+"';";
+            //System.out.println(tmpS);
+            BDConnection.update(tmpS);
+            //BDConnection.getCon().commit();
             
             //reponse !
             ReponseLUGAP repLugap = new ReponseLUGAP(ttype);
